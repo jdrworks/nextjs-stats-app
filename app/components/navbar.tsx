@@ -1,4 +1,3 @@
-import React from "react";
 import NavbarLinks from "@/app/components/navbar-links";
 
 export default function NavBar() {

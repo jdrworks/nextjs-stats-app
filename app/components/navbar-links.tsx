@@ -13,6 +13,10 @@ const links = [
         text: 'Players',
         href: '/players'
     },
+    {
+        text: 'Games',
+        href: '/games'
+    },
 ]
 
 export default function NavbarLinks() {

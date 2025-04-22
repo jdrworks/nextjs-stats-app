@@ -1,6 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
+import { z } from 'zod';
 import Button from "@/app/components/button";
-import Card from "@/app/components/card";
 
 export const Player: React.FC<{
     name: string;
@@ -20,9 +21,9 @@ export const Player: React.FC<{
     const winrate = wins + losses === 0 ? 'N/A' : Math.round((wins / (wins + losses)) * 100) + '%';
 
     return (
-        <Card>
+        <div className="rounded-md bg-white px-3 py-2 shadow-sm">
             <div className="flex items-center justify-between mb-3">
-                <strong className="text-lg">{name}</strong>
+                <strong>{name}</strong>
                 <Button href={`/player/${id}`}>Details</Button>
             </div>
             <table className="w-full">
@@ -41,6 +42,6 @@ export const Player: React.FC<{
                     </tr>
                 </tbody>
             </table>
-        </Card>
+        </div>
     );
 }

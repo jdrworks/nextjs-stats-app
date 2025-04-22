@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import NavBar from "@/app/components/navbar";
+import Header from "@/app/components/header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,11 +20,6 @@ export const metadata: Metadata = {
   description: "GUI for interacting with Magic Stats",
 };
 
-let headerText: string = 'Header';
-export function updateHeaderText(text: string) {
-    headerText = text;
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,15 +33,7 @@ export default function RootLayout({
         <div className="min-h-full">
             <NavBar/>
 
-            <header className="bg-white shadow-sm">
-                <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">{headerText}</h1>
-                </div>
-            </header>
-
-            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                {children}
-            </div>
+            {children}
         </div>
     </body>
     </html>

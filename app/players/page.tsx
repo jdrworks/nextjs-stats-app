@@ -1,16 +1,24 @@
-import {Players} from "@/app/components/players";
-import {updateHeaderText} from "@/app/layout";
+import Header from "@/app/components/header";
+import type {Metadata} from "next";
+import React from "react";
+import {getPlayers} from "@/app/lib/query";
+import {Player} from "@/app/components/player";
 
-export default function Page() {
-    updateHeaderText('Players');
+export const metadata: Metadata = {
+    title: "Magic Stats",
+    description: "GUI for interacting with Magic Stats",
+};
+
+export default async function Page() {
+    const players = await getPlayers();
+
     return (
-        <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-            <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-                <Players />
-            </main>
-            <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-                Footer
-            </footer>
-        </div>
+        <Header text={`Players`}>
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {players?.data.map((player) => (
+                    <Player key={player.id} id={player.id} name={player.name} games={player.deck_game}></Player>
+                ))}
+            </div>
+        </Header>
     );
 }

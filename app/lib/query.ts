@@ -1,5 +1,5 @@
-import { PrismaClient } from '@/generated/prisma'
-import { z } from 'zod';
+import {PrismaClient} from '@/generated/prisma'
+import {z} from 'zod';
 
 const prisma = new PrismaClient()
 
@@ -10,6 +10,9 @@ export const getPlayers = async () => {
         orderBy: {
             name: "asc",
         },
+        include: {
+            deck_game: true
+        }
     });
 
     return {
@@ -26,7 +29,20 @@ export const getPlayer = async (id: number) => {
             id: z.coerce.number().parse(id)
         },
         include: {
-            deck: true
+            deck: {
+                include: {
+                    deck_game: true
+                }
+            },
+            deck_game: {
+                include: {
+                    game: {
+                        include: {
+                            deck_game: true
+                        }
+                    }
+                }
+            }
         }
     });
 
@@ -34,4 +50,31 @@ export const getPlayer = async (id: number) => {
         data: result,
         time: Date.now() - start
     }
+}
+
+export const fetchPlayers = async () => {
+    return prisma.player.findMany({
+        orderBy: {
+            name: 'asc'
+        },
+        include: {
+            deck: true
+        }
+    });
+}
+
+export const fetchGames = async () => {
+    return prisma.game.findMany({
+        orderBy: {
+            datetime: 'desc'
+        },
+        include: {
+            deck_game: {
+                include: {
+                    player: true,
+                    deck: true
+                }
+            }
+        }
+    });
 }

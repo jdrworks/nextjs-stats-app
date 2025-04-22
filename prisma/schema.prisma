@@ -10,18 +10,18 @@ datasource db {
 
 model deck {
   id        Int         @id @default(autoincrement())
-  player_id Int?
-  name      String?
+  player_id Int
+  name      String
   player    player?     @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   deck_game deck_game[]
 }
 
 model deck_game {
   id        Int     @id @default(autoincrement())
-  game_id   Int?
-  deck_id   Int?
-  player_id Int?
-  position  Int?
+  game_id   Int
+  deck_id   Int
+  player_id Int
+  position  Int
   player    player? @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   deck      deck?   @relation(fields: [deck_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   game      game?   @relation(fields: [game_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -29,13 +29,13 @@ model deck_game {
 
 model game {
   id        Int         @id @default(autoincrement())
-  datetime  Int?
+  datetime  Int
   deck_game deck_game[]
 }
 
 model player {
   id        Int         @id @default(autoincrement())
-  name      String?
+  name      String
   deck      deck[]
   deck_game deck_game[]
 }
