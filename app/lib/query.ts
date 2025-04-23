@@ -1,5 +1,7 @@
-import {PrismaClient} from '@/generated/prisma'
+import {Prisma, PrismaClient} from '@/generated/prisma'
 import {z} from 'zod';
+import {GameAddRow} from "@/app/components/forms/game";
+import deck_gameCreateManyInput = Prisma.deck_gameCreateManyInput;
 
 const prisma = new PrismaClient()
 

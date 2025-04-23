@@ -1,3 +1,5 @@
+import {ChangeEvent, useState} from "react";
+
 export interface dropdownOption {
     value: string | number;
     text: string;
@@ -10,20 +12,26 @@ export interface dropdownOptionGroup {
 
 export interface dropdownConfig {
     label: string;
+    name: string;
     options?: dropdownOption[];
     optionGroups?: dropdownOptionGroup[];
     defaultOption?: dropdownOption;
     value?: string | number;
 }
 
-export default function Dropdown({config}: { config: dropdownConfig }) {
-    console.log(config);
+export default function Dropdown({config, index, value, onChange}: { config: dropdownConfig, index: number, value?: number | string, onChange: (index: number, event: ChangeEvent<HTMLSelectElement>) => void}) {
+    const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        onChange(index, event);
+    };
+
     return (
         <div>
             <label id="listbox-label" className="block text-md font-bold text-gray-900">{config.label}</label>
             <select
+                name={config.name}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                value={config.value}
+                value={value}
+                onChange={handleChange}
             >
                 {config.defaultOption && (
                     <option
