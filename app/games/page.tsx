@@ -1,21 +1,21 @@
 import Header from "@/app/components/header";
 import type {Metadata} from "next";
 import React from "react";
-import {fetchGames} from "@/app/lib/query";
+import {fetchGames} from "@/app/lib/queries";
 import { DateTime } from "luxon";
 import Card from "@/app/components/card";
 import Link from "next/link";
 import {headerButton} from "@/app/components/header";
+import Button from "@/app/components/button";
 
 export const metadata: Metadata = {
-    title: "Magic Stats",
-    description: "GUI for interacting with Magic Stats",
+    title: "Games",
 };
 
 export default async function Page() {
     const games = await fetchGames();
     const headerButton: headerButton = {
-        href: '/games/new',
+        href: '/game/new',
         text: 'New Game'
     }
 
@@ -27,6 +27,7 @@ export default async function Page() {
                         <div className="flex items-center justify-between mb-3">
                             <strong className="text-xl">{DateTime.fromSeconds(game.datetime).toLocaleString()}</strong>
                             <span className="text-white">{game.id}</span>
+                            <Button href={`/game/${game.id}`}>Edit</Button>
                         </div>
                         <table className="w-full">
                             <thead className="font-bold border-b-2 border-gray-200 text-left">

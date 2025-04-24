@@ -1,35 +1,40 @@
 'use client';
 
 import React, {ChangeEvent, useActionState, useState} from 'react';
-import Dropdown, {dropdownConfig} from "@/app/components/dropdown";
+import Dropdown, {dropdownConfig} from "@/app/components/forms/dropdown";
 import {XMarkIcon, PlusIcon} from "@heroicons/react/24/solid";
-import {createGame} from "@/app/lib/actions";
+import {createGame, updateGame} from "@/app/lib/actions";
+import { ControlButton } from "@/app/components/forms/button";
 
-export interface GameAddRow {
+export interface GameFormRow {
     [k: string]: number;
     player: number;
     deck: number;
     position: number;
+    id: number
 }
 
-export const GameAddForm: React.FC<{
+export function GameForm({playerConfig, deckConfig, gameId, gameFormRows}: {
     playerConfig: dropdownConfig,
-    deckConfig: dropdownConfig
-}> = ({playerConfig, deckConfig}) => {
+    deckConfig: dropdownConfig,
+    gameId?: number,
+    gameFormRows?: GameFormRow[],
+}) {
     const initialState = { message: null, errors: {} };
-    const [state, dispatch] = useActionState(createGame, initialState);
-    const [inputFields, setInputFields] = useState<GameAddRow[]>([
-        {player: 0, deck: 0, position: 0}
+    const [createState, create] = useActionState(createGame, initialState);
+    const [updateState, update] = useActionState(updateGame, initialState);
+    const [inputFields, setInputFields] = useState<GameFormRow[]>(gameFormRows ? gameFormRows : [
+        {player: 0, deck: 0, position: 0, id: 0}
     ])
 
     const handleFormChange = (index: number, event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
-        const data: GameAddRow[] = [...inputFields];
+        const data: GameFormRow[] = [...inputFields];
         data[index][event.target.name] = parseInt(event.target.value, 10);
         setInputFields(data);
     }
 
     const addFields = () => {
-        const newfield: GameAddRow = {player: 0, deck: 0, position: 0};
+        const newfield: GameFormRow = {player: 0, deck: 0, position: 0, id: 0};
 
         setInputFields([...inputFields, newfield])
     }
@@ -41,23 +46,18 @@ export const GameAddForm: React.FC<{
     }
 
     return (
-        <form action={dispatch}>
+        <form action={gameId ? update : create}>
+            <input type="hidden" name="game" value={gameId}/>
             <div className="flex justify-end">
-                <button type="button" onClick={addFields} className="w-auto h-auto">
-                    <div className="flex-1 h-full">
-                        <div
-                            className="flex items-center justify-center flex-1 h-full p-2.5 border border-green-600 text-green-600 rounded-lg hover:bg-green-600 hover:text-white">
-                            <div className="relative">
-                                <PlusIcon className="size-4 stroke-current stroke-3"/>
-                            </div>
-                        </div>
-                    </div>
-                </button>
+                <ControlButton color="green" clickHandler={addFields}>
+                    <PlusIcon className="size-4 stroke-current stroke-3"/>
+                </ControlButton>
             </div>
             <div>
                 {inputFields.map((input, index) => {
                     return (
                         <div key={index} className="flex gap-4">
+                            <input type="hidden" name="id" value={input.id} />
                             <div className="flex-grow">
                                 <Dropdown config={playerConfig} index={index} onChange={handleFormChange}
                                           value={input.player}/>
@@ -78,16 +78,9 @@ export const GameAddForm: React.FC<{
                                 />
                             </div>
                             <div className="flex-none content-end">
-                                <button type="button" onClick={() => removeFields(index)} className="w-auto h-auto">
-                                    <div className="flex-1 h-full">
-                                        <div
-                                            className="flex items-center justify-center flex-1 h-full p-2.5 border border-red-500 text-red-500 rounded-lg hover:bg-red-500 hover:text-white">
-                                            <div className="relative">
-                                                <XMarkIcon className="size-4 stroke-current stroke-3"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
+                                <ControlButton color="red" clickHandler={() => removeFields(index)}>
+                                    <XMarkIcon className="size-4 stroke-current stroke-3"/>
+                                </ControlButton>
                             </div>
                         </div>
                     )
@@ -97,9 +90,9 @@ export const GameAddForm: React.FC<{
                     <button type="submit" className="w-auto h-auto">
                         <div className="flex-1 h-full">
                             <div
-                                className="flex items-center justify-center flex-1 h-full p-2.5 text-gray-200 bg-purple-500 rounded-lg hover:bg-purple-700 hover:text-white">
+                                className="flex items-center justify-center flex-1 h-full p-2.5 text-emerald-50 bg-emerald-700 rounded-lg hover:bg-emerald-800 hover:text-white">
                                 <div className="relative font-bold">
-                                    Add Game
+                                    {gameId ? 'Update Game' : 'Add Game'}
                                 </div>
                             </div>
                         </div>

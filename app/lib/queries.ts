@@ -1,6 +1,6 @@
 import {Prisma, PrismaClient} from '@/generated/prisma'
 import {z} from 'zod';
-import {GameAddRow} from "@/app/components/forms/game";
+import {GameFormRow} from "@/app/components/forms/game";
 import deck_gameCreateManyInput = Prisma.deck_gameCreateManyInput;
 
 const prisma = new PrismaClient()
@@ -60,7 +60,11 @@ export const fetchPlayers = async () => {
             name: 'asc'
         },
         include: {
-            deck: true
+            deck: {
+                orderBy: {
+                    name: 'asc'
+                }
+            }
         }
     });
 }
@@ -79,4 +83,14 @@ export const fetchGames = async () => {
             }
         }
     });
+}
+export const fetchGame = async (id: number) => {
+    return prisma.game.findUnique({
+        where: {
+            id: z.coerce.number().parse(id)
+        },
+        include: {
+            deck_game: true
+        }
+    })
 }

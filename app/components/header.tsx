@@ -9,7 +9,7 @@ export interface headerButton {
 export default function Header({ children, text, button }: Readonly<{ children: React.ReactNode, text: string, button?: headerButton }>) {
     return (
         <>
-            <header className="bg-white shadow-sm">
+            <header className="bg-slate-100 shadow-sm">
                 <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex items-center justify-between mb-3">
                     <h1 className="text-3xl font-bold tracking-tight text-gray-900">{text}</h1>
                     { button && (

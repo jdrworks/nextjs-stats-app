@@ -32,8 +32,8 @@ export default function NavbarLinks() {
                         className={clsx(
                             'rounded-md px-3 py-2 text-sm font-medium',
                             {
-                                'text-gray-300 hover:bg-gray-700 hover:text-white': !isActive,
-                                'bg-gray-900 text-white': isActive,
+                                'text-gray-300 hover:bg-slate-600 hover:text-white': !isActive,
+                                'bg-slate-800 text-white': isActive,
                             }
                         )}>
                         {link.text}

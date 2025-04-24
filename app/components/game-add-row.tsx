@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Dropdown, { dropdownConfig } from "@/app/components/dropdown";
+import Dropdown, { dropdownConfig } from "@/app/components/forms/dropdown";
 
 export const GameAddRow: React.FC<{
     playerConfig: dropdownConfig;

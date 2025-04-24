@@ -1,4 +1,4 @@
-import { getPlayer } from "@/app/lib/query";
+import { getPlayer } from "@/app/lib/queries";
 import type {Metadata} from "next";
 import Header from "@/app/components/header";
 import Card from "@/app/components/card";
@@ -6,32 +6,35 @@ import React from "react";
 import {DeckRow} from "@/app/components/deck-row";
 
 export const metadata: Metadata = {
-    title: "Magic Stats",
-    description: "GUI for interacting with Magic Stats",
+    title: "Player Details",
 };
 
 export default async function Page({ params }: { params: Promise<{ id: number }>}) {
     const p = await params;
     const player = await getPlayer(p.id);
     const playerData = await player.data
-console.log(playerData);
+
     let wins = 0;
     let losses = 0;
     let firstOut = 0;
     let threePlayerWins = 0;
     let threePlayerLosses = 0;
     playerData?.deck_game.forEach((deck_game) => {
+        let playerPosition = 0;
+        let lowestPosition = 0;
         if (deck_game.position === 1) {
             wins++;
         } else {
             losses++;
         }
         const gameCount = deck_game.game?.deck_game.length;
-        deck_game.game?.deck_game.forEach((deck_game) => {
+        deck_game.game?.deck_game.map((deck_game) => {
+            if (deck_game.position > lowestPosition) {
+                lowestPosition = deck_game.position;
+            }
+
             if (deck_game.player_id === playerData.id) {
-                if (deck_game.position === gameCount) {
-                    firstOut++;
-                }
+                playerPosition = deck_game.position;
                 if (gameCount === 3) {
                     if (deck_game.position === 1) {
                         threePlayerWins++;
@@ -40,7 +43,11 @@ console.log(playerData);
                     }
                 }
             }
-        })
+        });
+
+        if (playerPosition === lowestPosition) {
+            firstOut++;
+        }
     });
 
     const totalGames = wins + losses;

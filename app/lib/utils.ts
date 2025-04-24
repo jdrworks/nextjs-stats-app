@@ -1,18 +1,8 @@
-import Header from "@/app/components/header";
-import type {Metadata} from "next";
-import React from "react";
-import Card from "@/app/components/card";
-import {fetchPlayers} from "@/app/lib/query";
-import Dropdown, { dropdownConfig, dropdownOption, dropdownOptionGroup} from "@/app/components/dropdown";
-import Button from "@/app/components/button";
-import {GameAddForm} from "@/app/components/forms/game";
+import {fetchGame, fetchPlayers} from "@/app/lib/queries";
+import {dropdownConfig, dropdownOption, dropdownOptionGroup} from "@/app/components/forms/dropdown";
+import {GameFormRow} from "@/app/components/forms/game";
 
-export const metadata: Metadata = {
-    title: "Magic Stats",
-    description: "GUI for interacting with Magic Stats",
-};
-
-export default async function Page() {
+export async function generateDropdownConfig(): Promise<{ playerConfig: dropdownConfig, deckConfig: dropdownConfig }> {
     const players = await fetchPlayers();
     const playerOptions: dropdownOption[] = [];
     const deckOptionsGroup: dropdownOptionGroup[] = [];
@@ -54,13 +44,21 @@ export default async function Page() {
         value: 0
     }
 
-    return (
-        <Header text={`New Game`}>
-            <div className="w-full grid grid-cols-1 gap-4">
-                <Card>
-                    <GameAddForm playerConfig={playerDropdownConfig} deckConfig={deckDropdownConfig}  />
-                </Card>
-            </div>
-        </Header>
-    );
+    return { playerConfig: playerDropdownConfig, deckConfig: deckDropdownConfig };
+}
+
+export async function generateGameFormRows(game_id: number): Promise<GameFormRow[]> {
+    const game = await fetchGame(game_id);
+    const gameFormRows: GameFormRow[] = [];
+
+    game?.deck_game?.map((row) => {
+        gameFormRows.push({
+            player: row.player_id,
+            deck: row.deck_id,
+            position: row.position,
+            id: row.id,
+        });
+    });
+
+    return gameFormRows;
 }

@@ -1,12 +1,11 @@
 import Header from "@/app/components/header";
 import type {Metadata} from "next";
 import React from "react";
-import {getPlayers} from "@/app/lib/query";
+import {getPlayers} from "@/app/lib/queries";
 import {Player} from "@/app/components/player";
 
 export const metadata: Metadata = {
-    title: "Magic Stats",
-    description: "GUI for interacting with Magic Stats",
+    title: "Players",
 };
 
 export default async function Page() {
