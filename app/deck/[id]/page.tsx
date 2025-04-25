@@ -2,7 +2,7 @@ import Header from "@/app/components/header";
 import type { Metadata } from "next";
 import React from "react";
 import { fetchDeck } from "@/app/lib/queries";
-import Card from "@/app/components/card";
+import { StatCards } from "@/app/components/stat-cards";
 
 export const metadata: Metadata = {
     title: "Deck Details",
@@ -15,9 +15,7 @@ export default async function Page({ params }: { params: Promise<{ id: number }>
     return (
         <Header text={deck?.name ?? ''}>
             <div className="w-full grid grid-cols-1 gap-4">
-                <Card>
-                    Owner: {deck?.player?.name ?? ''}
-                </Card>
+                <StatCards deck_games={deck.deck_game} />
             </div>
         </Header>
     );

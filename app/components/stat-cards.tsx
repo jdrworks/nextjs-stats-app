@@ -1,16 +1,16 @@
 import Card from "@/app/components/card";
 import React from "react";
 import { StatCard } from "@/app/components/stat-card";
-import { PlayerWithDeckGame } from "@/app/lib/types";
+import { DeckGameWithGames } from "@/app/lib/types";
 
-export function StatCards({ player }:  { player: PlayerWithDeckGame }) {
+export function StatCards({ deck_games }:  { deck_games: DeckGameWithGames[] }) {
     let wins = 0;
     let losses = 0;
     let firstOut = 0;
     let threePlayerWins = 0;
     let threePlayerLosses = 0;
 
-    player.deck_game.forEach((deck_game) => {
+    deck_games.forEach((deck_game) => {
         let playerPosition = 0;
         let lowestPosition = 0;
         if (deck_game.position === 1) {
@@ -19,15 +19,15 @@ export function StatCards({ player }:  { player: PlayerWithDeckGame }) {
             losses++;
         }
         const gameCount = deck_game.game?.deck_game.length;
-        deck_game.game?.deck_game.map((deck_game) => {
-            if (deck_game.position > lowestPosition) {
-                lowestPosition = deck_game.position;
+        deck_game.game?.deck_game.map((gam_deck_game) => {
+            if (gam_deck_game.position > lowestPosition) {
+                lowestPosition = gam_deck_game.position;
             }
 
-            if (deck_game.player_id === player.id) {
-                playerPosition = deck_game.position;
+            if (gam_deck_game.player_id === deck_game.player_id) {
+                playerPosition = gam_deck_game.position;
                 if (gameCount === 3) {
-                    if (deck_game.position === 1) {
+                    if (gam_deck_game.position === 1) {
                         threePlayerWins++;
                     } else {
                         threePlayerLosses++;

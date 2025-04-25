@@ -8,7 +8,6 @@ export const playerInclude = {
         },
         include: {
             deck_game: true,
-            player: true,
         }
     },
     deck_game: {
@@ -24,14 +23,22 @@ export const playerInclude = {
 
 export const deckInclude = {
     player: true,
-    deck_game: true,
+    deck_game: {
+        include: {
+            game: {
+                include: {
+                    deck_game: true
+                }
+            }
+        }
+    }
 } satisfies Prisma.deckInclude
 
 export const gameInclude = {
     deck_game: {
         include: {
             player: true,
-                deck: true
+            deck: true
         }
     }
 } satisfies Prisma.gameInclude
@@ -42,3 +49,25 @@ export type GamesWithDeckGame = Prisma.PromiseReturnType<typeof fetchGames>
 export type GameWithDeckGame = Prisma.PromiseReturnType<typeof fetchGame>
 export type DecksWithDeckGame = Prisma.PromiseReturnType<typeof fetchDecks>
 export type DeckWithDeckGame = Prisma.PromiseReturnType<typeof fetchDeck>
+export type DeckGameWithGames = Prisma.deck_gameGetPayload<{
+    include: {
+        game: {
+            include: {
+                deck_game: true
+            }
+        }
+    }
+}>
+export type DeckWithDeckGames = Prisma.deckGetPayload<{
+    include: {
+        deck_game: {
+            include: {
+                game: {
+                    include: {
+                        deck_game: true
+                    }
+                }
+            }
+        }
+    }
+}>

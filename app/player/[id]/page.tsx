@@ -5,7 +5,6 @@ import Card from "@/app/components/card";
 import React from "react";
 import { DeckTable } from "@/app/components/deck-table";
 import { PlayerWithDeckGame } from "@/app/lib/types";
-import { StatCard } from "@/app/components/stat-card";
 import { StatCards } from "@/app/components/stat-cards";
 
 export const metadata: Metadata = {
@@ -19,7 +18,7 @@ export default async function Page({ params }: { params: Promise<{ id: number }>
     return (
         <Header text={`${player?.name}'s Details`}>
             <div className="w-full grid grid-cols-1 gap-4">
-                <StatCards player={player} />
+                <StatCards deck_games={player.deck_game} />
                 <Card>
                     <div className="flex items-center justify-between mb-3">
                         <strong className="text-xl">Decks</strong>
