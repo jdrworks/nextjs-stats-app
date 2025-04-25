@@ -1,30 +1,38 @@
 'use client';
 
 import Link from "next/link";
-import {usePathname} from "next/navigation";
+import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 import clsx from 'clsx';
 
-const links = [
+const links: { text: string, href: string, activeSegments: string[] }[] = [
     {
         text: 'Dashboard',
-        href: '/'
+        href: '/',
+        activeSegments: ['']
     },
     {
         text: 'Players',
-        href: '/players'
+        href: '/players',
+        activeSegments: ['players', 'player']
     },
     {
         text: 'Games',
-        href: '/games'
+        href: '/games',
+        activeSegments: ['games', 'game']
+    },
+    {
+        text: 'Decks',
+        href: '/decks',
+        activeSegments: ['decks', 'deck']
     },
 ]
 
 export default function NavbarLinks() {
-    const pathname = usePathname();
+    const activeSegment = useSelectedLayoutSegment() ?? '';
     return (
         <>
             {links.map((link) => {
-                const isActive = pathname === link.href;
+                const isActive = link.activeSegments.includes(activeSegment);
                 return (
                     <Link
                         key={link.href}

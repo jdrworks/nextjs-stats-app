@@ -1,9 +1,9 @@
 'use client';
 
-import React, {ChangeEvent, useActionState, useState} from 'react';
-import Dropdown, {dropdownConfig} from "@/app/components/forms/dropdown";
-import {XMarkIcon, PlusIcon} from "@heroicons/react/24/solid";
-import {createGame, updateGame} from "@/app/lib/actions";
+import React, {ChangeEvent, useActionState, useState } from 'react';
+import Dropdown, { dropdownConfig } from "@/app/components/forms/dropdown";
+import { XMarkIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { createGame, updateGame } from "@/app/lib/actions";
 import { ControlButton } from "@/app/components/forms/button";
 
 export interface GameFormRow {

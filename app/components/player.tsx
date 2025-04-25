@@ -2,11 +2,8 @@ import React from 'react';
 import Button from "@/app/components/button";
 import Card from "@/app/components/card";
 
-export const Player: React.FC<{
-    name: string;
-    id: number;
-    games: Array<{id: number, game_id: number, deck_id: number, player_id: number, position: number}>
-}> = ({name, id, games}) => {
+export function Player({ name, id, games }: { name: string, id: number,
+games: Array<{id: number, game_id: number, deck_id: number, player_id: number, position: number}>}) {
     let wins = 0;
     let losses = 0;
     games.forEach((game) => {

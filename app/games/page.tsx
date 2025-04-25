@@ -1,11 +1,11 @@
 import Header from "@/app/components/header";
 import type {Metadata} from "next";
 import React from "react";
-import {fetchGames} from "@/app/lib/queries";
+import { fetchGames } from "@/app/lib/queries";
 import { DateTime } from "luxon";
 import Card from "@/app/components/card";
 import Link from "next/link";
-import {headerButton} from "@/app/components/header";
+import { headerButton } from "@/app/components/header";
 import Button from "@/app/components/button";
 
 export const metadata: Metadata = {
