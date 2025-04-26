@@ -7,7 +7,16 @@ export const playerInclude = {
             name: 'asc'
         },
         include: {
-            deck_game: true,
+            deck_game: {
+                include: {
+                    game: {
+                        include: {
+                            deck_game: true
+                        }
+                    }
+                }
+            },
+            player: true,
         }
     },
     deck_game: {
@@ -58,16 +67,49 @@ export type DeckGameWithGames = Prisma.deck_gameGetPayload<{
         }
     }
 }>
-export type DeckWithDeckGames = Prisma.deckGetPayload<{
-    include: {
+export type DeckGame = {
+    id: number,
+    game_id: number,
+    deck_id: number,
+    player_id: number,
+    position: number,
+    game: {
+        id: number,
+        datetime: number,
         deck_game: {
-            include: {
-                game: {
-                    include: {
-                        deck_game: true
-                    }
-                }
-            }
+            id: number,
+            game_id: number,
+            deck_id: number,
+            player_id: number,
+            position: number,
         }
     }
-}>
+}
+
+export type Deck = {
+    id: number,
+    player_id: number,
+    name: string,
+    deck_game: {
+        id: number,
+        game_id: number,
+        deck_id: number,
+        player_id: number,
+        position: number,
+        game: {
+            id: number,
+            datetime: number,
+            deck_game?: {
+                id: number,
+                game_id: number,
+                deck_id: number,
+                player_id: number,
+                position: number,
+            }[]
+        } | null
+    }[],
+    player: {
+        id: number,
+        name: string,
+    } | null
+}

@@ -86,11 +86,11 @@ export function GameForm({playerConfig, deckConfig, gameId, gameFormRows}: {
                     )
                 })}
 
-                <div className="flex-grow flex justify-center mt-6">
+                <div className="flex-grow flex justify-end mt-6">
                     <button type="submit" className="w-auto h-auto">
                         <div className="flex-1 h-full">
                             <div
-                                className="flex items-center justify-center flex-1 h-full p-2.5 text-emerald-50 bg-emerald-700 rounded-lg hover:bg-emerald-800 hover:text-white">
+                                className="flex items-center justify-center flex-1 h-full px-2.5 py-2 text-emerald-50 bg-emerald-700 rounded-lg hover:bg-emerald-800 hover:text-white">
                                 <div className="relative font-bold">
                                     {gameId ? 'Update Game' : 'Add Game'}
                                 </div>

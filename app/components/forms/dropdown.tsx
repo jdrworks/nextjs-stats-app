@@ -19,7 +19,12 @@ export interface dropdownConfig {
     value?: string | number;
 }
 
-export default function Dropdown({config, index, value, onChange}: { config: dropdownConfig, index: number, value?: number | string, onChange: (index: number, event: ChangeEvent<HTMLSelectElement>) => void}) {
+export default function Dropdown({config, index, value, onChange}: {
+    config: dropdownConfig,
+    index: number,
+    value?: number | string,
+    onChange: (index: number, event: ChangeEvent<HTMLSelectElement>) => void
+}) {
     const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
         onChange(index, event);
     };

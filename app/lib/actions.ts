@@ -1,11 +1,11 @@
 'use server';
 
-import {revalidatePath} from "next/cache";
-import {redirect} from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { Prisma, PrismaClient} from '@/generated/prisma'
 import deck_gameCreateManyInput = Prisma.deck_gameCreateManyInput;
 import { DateTime } from 'luxon';
-import {z} from "zod";
+import { z } from "zod";
 
 const prisma = new PrismaClient()
 
@@ -19,7 +19,6 @@ export type State = {
 };
 
 export async function createGame(prevState: State, formData: FormData) {
-    return prevState;
     const newGame = await prisma.game.create({
         data: {
             datetime: DateTime.now().toSeconds(),
@@ -89,6 +88,42 @@ export async function updateGame(prevState: State, formData: FormData) {
 
     revalidatePath('/games');
     redirect('/games');
+
+    return prevState;
+}
+
+export async function createDeck(prevState: State, formData: FormData) {
+    const playerId = z.coerce.number().parse(formData.get('player'));
+    const name = z.coerce.string().parse(formData.get('name'));
+    const deck = await prisma.deck.create({
+        data: {
+            player_id: playerId,
+            name: name,
+        }
+    });
+
+    revalidatePath(`/deck/${deck.id}`);
+    redirect(`/deck/${deck.id}`);
+
+    return prevState;
+}
+
+export async function updateDeck(prevState: State, formData: FormData) {
+    const deckId = z.coerce.number().parse(formData.get('deck'));
+    const playerId = z.coerce.number().parse(formData.get('player'));
+    const name = z.coerce.string().parse(formData.get('name'));
+    const deck = await prisma.deck.update({
+        where: {
+            id: deckId,
+        },
+        data: {
+            player_id: playerId,
+            name: name,
+        }
+    });
+
+    revalidatePath(`/deck/${deck.id}`);
+    redirect(`/deck/${deck.id}`);
 
     return prevState;
 }

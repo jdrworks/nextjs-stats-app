@@ -1,12 +1,12 @@
 import Button from "@/app/components/button";
 import React from "react";
 import { deck_game } from "@/generated/prisma";
-import Link from "next/link";
-import { DeckWithDeckGame } from "@/app/lib/types";
+import Link from "@/app/components/link";
+import { Deck } from "@/app/lib/types";
 
 
 
-export function DeckRow({ deck }: { deck: DeckWithDeckGame })  {
+export function DeckRow({ deck }: { deck: Deck })  {
     let wins = 0;
     let losses = 0;
     const hasPlayers = Object.hasOwnProperty.call(deck, "player");
@@ -25,11 +25,8 @@ export function DeckRow({ deck }: { deck: DeckWithDeckGame })  {
             <td className="py-2">{deck.name}</td>
             { hasPlayers && (
                 <td className="py-2">
-                    <Link
-                        href={`/player/${deck.player?.id}`}
-                        className="text-emerald-600 hover:underline"
-                    >
-                        {deck.player?.name}
+                    <Link href={`/player/${deck.player.id}`}>
+                        {deck.player.name}
                     </Link>
                 </td>
             )}

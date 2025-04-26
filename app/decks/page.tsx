@@ -1,4 +1,4 @@
-import Header from "@/app/components/header";
+import Header, { headerButton } from "@/app/components/header";
 import type { Metadata } from "next";
 import React from "react";
 import { fetchDecks } from "@/app/lib/queries";
@@ -11,9 +11,13 @@ export const metadata: Metadata = {
 
 export default async function Page() {
     const decks = await fetchDecks();
+    const headerButton: headerButton = {
+        href: '/deck/new',
+        text: 'New Deck'
+    }
 
     return (
-        <Header text={`Decks`}>
+        <Header text={`Decks`} button={headerButton}>
             <div className="w-full grid grid-cols-1 gap-4">
                 <Card>
                     <DeckTable decks={decks} showPlayers={true} />

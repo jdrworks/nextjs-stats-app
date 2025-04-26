@@ -1,9 +1,9 @@
 import React from "react";
 import { DeckRow } from "@/app/components/deck-row";
-import { DecksWithDeckGame } from "@/app/lib/types";
+import { Deck } from "@/app/lib/types";
 
 export function DeckTable({ decks, showPlayers }: {
-    decks: DecksWithDeckGame,
+    decks: Deck[],
     showPlayers?: boolean,
 }) {
 
