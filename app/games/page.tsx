@@ -6,13 +6,14 @@ import { DateTime } from "luxon";
 import Card from "@/app/components/card";
 import Link from "@/app/components/link";
 import Button from "@/app/components/button";
+import { GameWithRelations } from "@/app/lib/types";
 
 export const metadata: Metadata = {
     title: "Games",
 };
 
 export default async function Page() {
-    const games = await fetchGames();
+    const games: GameWithRelations[] = await fetchGames();
     const headerButton: headerButton = {
         href: '/game/new',
         text: 'New Game'
@@ -21,10 +22,10 @@ export default async function Page() {
     return (
         <Header text={`Games`} button={headerButton}>
             <div className="w-full grid grid-cols-1 gap-4">
-                {games.map((game) => (
+                {games.map((game: GameWithRelations) => (
                     <Card key={game.id}>
                         <div className="flex items-center justify-between mb-3">
-                            <strong className="text-xl">{DateTime.fromSeconds(game.datetime).toLocaleString()}</strong>
+                            <strong className="text-xl">{DateTime.fromJSDate(game.datetime).toLocaleString()}</strong>
                             <span className="text-white">{game.id}</span>
                             <Button href={`/game/${game.id}/edit`}>Edit</Button>
                         </div>
@@ -37,15 +38,15 @@ export default async function Page() {
                                 </tr>
                             </thead>
                             <tbody>
-                            {game.deck_game.map((deck_game) => (
-                                <tr key={deck_game.id}>
+                            {game.gameResults.map((gameResult, index) => (
+                                <tr key={index}>
                                     <td>
-                                        <Link href={`/player/${deck_game.player?.id}`}>
-                                            {deck_game.player?.name}
-                                        </Link> {deck_game.position === 1 ? '(Winner)' : ''}
+                                        <Link href={`/player/${gameResult.playerId}`}>
+                                            {gameResult.player.name}
+                                        </Link> {gameResult.position === 1 ? '(Winner)' : ''}
                                     </td>
-                                    <td>{deck_game.deck?.name}</td>
-                                    <td>{deck_game.position}</td>
+                                    <td>{gameResult.deck.name}</td>
+                                    <td>{gameResult.position}</td>
                                 </tr>
                             ))}
                             </tbody>

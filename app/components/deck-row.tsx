@@ -1,17 +1,17 @@
 import Button from "@/app/components/button";
 import React from "react";
-import { deck_game } from "@/generated/prisma";
 import Link from "@/app/components/link";
-import { Deck } from "@/app/lib/types";
+import { DeckWithRelations } from "@/app/lib/types";
+import { GameResult } from "@/generated/prisma";
 
 
 
-export function DeckRow({ deck }: { deck: Deck })  {
+export function DeckRow({ deck, showPlayer }: { deck: DeckWithRelations, showPlayer?: boolean }) {
     let wins = 0;
     let losses = 0;
-    const hasPlayers = Object.hasOwnProperty.call(deck, "player");
-    deck.deck_game.forEach((game: deck_game) => {
-        if (game.position === 1) {
+
+    deck.gameResults.map((gameResult: GameResult) => {
+        if (gameResult.position === 1) {
             wins++;
         } else {
             losses++;
@@ -23,7 +23,7 @@ export function DeckRow({ deck }: { deck: Deck })  {
     return (
         <tr key={deck.id} className="border-t-1 border-gray-200">
             <td className="py-2">{deck.name}</td>
-            { hasPlayers && (
+            { showPlayer && (
                 <td className="py-2">
                     <Link href={`/player/${deck.player.id}`}>
                         {deck.player.name}

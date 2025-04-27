@@ -1,12 +1,13 @@
 import React from 'react';
 import Button from "@/app/components/button";
 import Card from "@/app/components/card";
+import { GameResult } from "@/generated/prisma";
 
-export function Player({ name, id, games }: { name: string, id: number,
-games: Array<{id: number, game_id: number, deck_id: number, player_id: number, position: number}>}) {
+export function PlayerCard({ name, id, games }: { name: string, id: number,
+games: GameResult[]}) {
     let wins = 0;
     let losses = 0;
-    games.forEach((game) => {
+    games.map((game) => {
         if (game.position === 1) {
             wins++;
         } else {

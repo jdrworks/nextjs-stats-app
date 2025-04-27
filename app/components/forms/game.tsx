@@ -5,13 +5,14 @@ import Dropdown, { dropdownConfig } from "@/app/components/forms/dropdown";
 import { XMarkIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { createGame, updateGame } from "@/app/lib/actions";
 import { ControlButton } from "@/app/components/forms/button";
+import { z } from "zod";
 
 export interface GameFormRow {
     [k: string]: number;
-    player: number;
-    deck: number;
-    position: number;
+    deckId: number;
     id: number
+    playerId: number;
+    position: number;
 }
 
 export function GameForm({playerConfig, deckConfig, gameId, gameFormRows}: {
@@ -24,17 +25,17 @@ export function GameForm({playerConfig, deckConfig, gameId, gameFormRows}: {
     const [createState, create] = useActionState(createGame, initialState);
     const [updateState, update] = useActionState(updateGame, initialState);
     const [inputFields, setInputFields] = useState<GameFormRow[]>(gameFormRows ? gameFormRows : [
-        {player: 0, deck: 0, position: 0, id: 0}
+        { deckId: 0, id: 0, playerId: 0, position: 0 }
     ])
 
     const handleFormChange = (index: number, event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
         const data: GameFormRow[] = [...inputFields];
-        data[index][event.target.name] = parseInt(event.target.value, 10);
+        data[index][event.target.name] = z.coerce.number().parse(event.target.value);
         setInputFields(data);
     }
 
     const addFields = () => {
-        const newfield: GameFormRow = {player: 0, deck: 0, position: 0, id: 0};
+        const newfield: GameFormRow = { deckId: 0, id: 0, playerId: 0,position: 0 };
 
         setInputFields([...inputFields, newfield])
     }
@@ -47,7 +48,7 @@ export function GameForm({playerConfig, deckConfig, gameId, gameFormRows}: {
 
     return (
         <form action={gameId ? update : create}>
-            <input type="hidden" name="game" value={gameId}/>
+            <input type="hidden" name="gameId" value={gameId}/>
             <div className="flex justify-end">
                 <ControlButton color="green" clickHandler={addFields}>
                     <PlusIcon className="size-4 stroke-current stroke-3"/>
@@ -60,11 +61,11 @@ export function GameForm({playerConfig, deckConfig, gameId, gameFormRows}: {
                             <input type="hidden" name="id" value={input.id} />
                             <div className="flex-grow">
                                 <Dropdown config={playerConfig} index={index} onChange={handleFormChange}
-                                          value={input.player}/>
+                                          value={input.playerId}/>
                             </div>
                             <div className="flex-grow">
                                 <Dropdown config={deckConfig} index={index} onChange={handleFormChange}
-                                          value={input.deck}/>
+                                          value={input.deckId}/>
                             </div>
                             <div className="flex-grow">
                                 <label className="block text-md font-bold text-gray-900">Position</label>

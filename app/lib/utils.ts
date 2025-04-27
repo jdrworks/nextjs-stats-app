@@ -1,9 +1,10 @@
 import {fetchGame, fetchPlayers} from "@/app/lib/queries";
 import {dropdownConfig, dropdownOption, dropdownOptionGroup} from "@/app/components/forms/dropdown";
 import {GameFormRow} from "@/app/components/forms/game";
+import { DeckWithRelations, GameWithRelations, PlayerWithRelations } from "@/app/lib/types";
 
 export async function generateDropdownConfig(): Promise<{ playerConfig: dropdownConfig, deckConfig: dropdownConfig }> {
-    const players = await fetchPlayers();
+    const players: PlayerWithRelations[] = await fetchPlayers();
     const playerOptions: dropdownOption[] = [];
     const deckOptionsGroup: dropdownOptionGroup[] = [];
     players.map((player) => {
@@ -12,7 +13,7 @@ export async function generateDropdownConfig(): Promise<{ playerConfig: dropdown
             text: player.name,
         })
         const deckOptions: dropdownOption[] = [];
-        player.deck.map((deck) => {
+        player.decks.map((deck: DeckWithRelations) => {
             deckOptions.push({
                 value: deck.id,
                 text: deck.name,
@@ -25,7 +26,7 @@ export async function generateDropdownConfig(): Promise<{ playerConfig: dropdown
     });
     const playerDropdownConfig: dropdownConfig = {
         label: 'Choose a Player',
-        name: 'player',
+        name: 'playerId',
         options: playerOptions,
         defaultOption: {
             value: 0,
@@ -35,7 +36,7 @@ export async function generateDropdownConfig(): Promise<{ playerConfig: dropdown
     };
     const deckDropdownConfig: dropdownConfig = {
         label: 'Choose a Deck',
-        name: 'deck',
+        name: 'deckId',
         optionGroups: deckOptionsGroup,
         defaultOption: {
             value: 0,
@@ -47,16 +48,16 @@ export async function generateDropdownConfig(): Promise<{ playerConfig: dropdown
     return { playerConfig: playerDropdownConfig, deckConfig: deckDropdownConfig };
 }
 
-export async function generateGameFormRows(game_id: number): Promise<GameFormRow[]> {
-    const game = await fetchGame(game_id);
+export async function generateGameFormRows(gameId: number): Promise<GameFormRow[]> {
+    const game: GameWithRelations = await fetchGame(gameId);
     const gameFormRows: GameFormRow[] = [];
 
-    game?.deck_game?.map((row) => {
+    game.gameResults.map((gameResult) => {
         gameFormRows.push({
-            player: row.player_id,
-            deck: row.deck_id,
-            position: row.position,
-            id: row.id,
+            deckId: gameResult.deckId,
+            playerId: gameResult.playerId,
+            position: gameResult.position,
+            id: gameResult.id,
         });
     });
 

@@ -1,9 +1,9 @@
 import Card from "@/app/components/card";
 import React from "react";
 import { StatCard } from "@/app/components/stat-card";
-import { DeckGameWithGames } from "@/app/lib/types";
+import { GameResultWithRelations, GameResultWithPlayer } from "@/app/lib/types";
 
-export function StatCards({ deck_games }:  { deck_games: DeckGameWithGames[] }) {
+export function StatCards({ gameResults }:  { gameResults: GameResultWithRelations[] }) {
     let wins = 0;
     let losses = 0;
     let firstOut = 0;
@@ -13,46 +13,48 @@ export function StatCards({ deck_games }:  { deck_games: DeckGameWithGames[] }) 
     let thirdPlaceTies = 0;
     let threePlayerWins = 0;
     let threePlayerLosses = 0;
+    const gameCount = gameResults.length;
+    console.log(gameResults);
 
-    deck_games.forEach((deck_game) => {
+    gameResults.forEach((gameResult) => {
         let playerPosition = 0;
         let lowestPosition = 0;
         let secondPosition = false;
         let thirdPosition = false;
-        if (deck_game.position === 1) {
+        if (gameResult.position === 1) {
             wins++;
         } else {
             losses++;
         }
-        const gameCount = deck_game.game?.deck_game.length;
+
         let secondPlaces = 0;
         let thirdPlaces = 0;
-        deck_game.game?.deck_game.map((game_deck_game) => {
-            if (game_deck_game.position > lowestPosition) {
-                lowestPosition = game_deck_game.position;
+        gameResult.game.gameResults.map((subGameResult: GameResultWithPlayer) => {
+            if (subGameResult.position > lowestPosition) {
+                lowestPosition = subGameResult.position;
             }
 
-            if (game_deck_game.position === 2) {
+            if (subGameResult.position === 2) {
                 secondPlaces++;
             }
 
-            if (game_deck_game.position === 3 && gameCount !== 3) {
+            if (subGameResult.position === 3 && gameCount !== 3) {
                 thirdPlaces++;
             }
 
-            if (game_deck_game.player_id === deck_game.player_id) {
-                playerPosition = game_deck_game.position;
+            if (subGameResult.playerId === subGameResult.playerId) {
+                playerPosition = subGameResult.position;
                 if (gameCount === 3) {
-                    if (game_deck_game.position === 1) {
+                    if (subGameResult.position === 1) {
                         threePlayerWins++;
                     } else {
                         threePlayerLosses++;
                     }
-                } else if (game_deck_game.position === 3) {
+                } else if (subGameResult.position === 3) {
                     thirdPosition = true;
                 }
 
-                if (game_deck_game.position === 2) {
+                if (subGameResult.position === 2) {
                     secondPosition = true;
                 }
             }

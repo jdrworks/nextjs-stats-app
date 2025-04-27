@@ -1,115 +1,32 @@
 import { Prisma } from '@/generated/prisma';
-import { fetchDeck, fetchDecks, fetchGame, fetchGames, fetchPlayer, fetchPlayers } from "@/app/lib/queries";
+import { deckInclude, gameInclude, gameResultsInclude, playerInclude } from "@/app/lib/queries";
 
-export const playerInclude = {
-    deck: {
-        orderBy: {
-            name: 'asc'
-        },
-        include: {
-            deck_game: {
-                include: {
-                    game: {
-                        include: {
-                            deck_game: true
-                        }
-                    }
-                }
-            },
-            player: true,
-        }
-    },
-    deck_game: {
-        include: {
-            game: {
-                include: {
-                    deck_game: true
-                }
-            }
-        }
-    }
-} satisfies Prisma.playerInclude
+// Define a consistent deck type with relations
+export const playerWithRelations = {
+    include: playerInclude
+} satisfies Prisma.PlayerDefaultArgs
 
-export const deckInclude = {
-    player: true,
-    deck_game: {
-        include: {
-            game: {
-                include: {
-                    deck_game: true
-                }
-            }
-        }
-    }
-} satisfies Prisma.deckInclude
+export const deckWithRelations = {
+    include: deckInclude
+} satisfies Prisma.DeckDefaultArgs
 
-export const gameInclude = {
-    deck_game: {
-        include: {
-            player: true,
-            deck: true
-        }
-    }
-} satisfies Prisma.gameInclude
+export const gameResultWithRelations = {
+    include: gameResultsInclude
+} satisfies Prisma.GameResultDefaultArgs
 
-export type PlayersWithDeckGame = Prisma.PromiseReturnType<typeof fetchPlayers>
-export type PlayerWithDeckGame = Prisma.PromiseReturnType<typeof fetchPlayer>
-export type GamesWithDeckGame = Prisma.PromiseReturnType<typeof fetchGames>
-export type GameWithDeckGame = Prisma.PromiseReturnType<typeof fetchGame>
-export type DecksWithDeckGame = Prisma.PromiseReturnType<typeof fetchDecks>
-export type DeckWithDeckGame = Prisma.PromiseReturnType<typeof fetchDeck>
-export type DeckGameWithGames = Prisma.deck_gameGetPayload<{
+export const gameResultWithPlayer = {
     include: {
-        game: {
-            include: {
-                deck_game: true
-            }
-        }
+        player: true,
     }
-}>
-export type DeckGame = {
-    id: number,
-    game_id: number,
-    deck_id: number,
-    player_id: number,
-    position: number,
-    game: {
-        id: number,
-        datetime: number,
-        deck_game: {
-            id: number,
-            game_id: number,
-            deck_id: number,
-            player_id: number,
-            position: number,
-        }
-    }
-}
+} satisfies Prisma.GameResultDefaultArgs
 
-export type Deck = {
-    id: number,
-    player_id: number,
-    name: string,
-    deck_game: {
-        id: number,
-        game_id: number,
-        deck_id: number,
-        player_id: number,
-        position: number,
-        game: {
-            id: number,
-            datetime: number,
-            deck_game?: {
-                id: number,
-                game_id: number,
-                deck_id: number,
-                player_id: number,
-                position: number,
-            }[]
-        } | null
-    }[],
-    player: {
-        id: number,
-        name: string,
-    } | null
-}
+export const gameWithRelations = {
+    include: gameInclude,
+} satisfies Prisma.GameDefaultArgs
+
+// Create a type from this validator
+export type PlayerWithRelations = Prisma.PlayerGetPayload<typeof playerWithRelations>
+export type DeckWithRelations = Prisma.DeckGetPayload<typeof deckWithRelations>
+export type GameResultWithRelations = Prisma.GameResultGetPayload<typeof gameResultWithRelations>
+export type GameResultWithPlayer = Prisma.GameResultGetPayload<typeof gameResultWithPlayer>
+export type GameWithRelations = Prisma.GameGetPayload<typeof gameWithRelations>

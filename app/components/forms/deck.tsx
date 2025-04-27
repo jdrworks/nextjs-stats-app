@@ -3,17 +3,17 @@
 import Dropdown, { dropdownConfig } from "@/app/components/forms/dropdown";
 import React, { ChangeEvent, useActionState, useState } from "react";
 import { createDeck, updateDeck } from "@/app/lib/actions";
-import { Deck } from "@/app/lib/types";
+import { DeckWithRelations } from "@/app/lib/types";
 
 export function DeckForm({ playerConfig, deck }: {
     playerConfig: dropdownConfig,
-    deck?: Deck,
+    deck?: DeckWithRelations,
 }) {
     const initialState = { message: null, errors: {} };
     const [createState, create] = useActionState(createDeck, initialState);
     const [updateState, update] = useActionState(updateDeck, initialState);
     const [name, setName] = useState(deck ? deck.name : '');
-    const [player, setPlayer] = useState(deck ? deck.player_id : 0);
+    const [player, setPlayer] = useState(deck ? deck.playerId : 0);
 
     const handlePlayerChange = (index: number, event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
         setPlayer(parseInt(event.target.value, 10));
@@ -21,7 +21,7 @@ export function DeckForm({ playerConfig, deck }: {
 
     return (
         <form action={deck ? update : create}>
-            <input type="hidden" name="deck" value={deck?.id}/>
+            <input type="hidden" name="deckId" value={deck?.id}/>
             <div className="flex gap-4">
                 <div className="flex-grow">
                     <label className="block text-md font-bold text-gray-900">Deck Name</label>

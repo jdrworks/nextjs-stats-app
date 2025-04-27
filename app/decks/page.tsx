@@ -4,13 +4,14 @@ import React from "react";
 import { fetchDecks } from "@/app/lib/queries";
 import Card from "@/app/components/card";
 import { DeckTable } from "@/app/components/deck-table";
+import { DeckWithRelations } from "@/app/lib/types";
 
 export const metadata: Metadata = {
     title: "Decks",
 };
 
 export default async function Page() {
-    const decks = await fetchDecks();
+    const decks: DeckWithRelations[] = await fetchDecks();
     const headerButton: headerButton = {
         href: '/deck/new',
         text: 'New Deck'

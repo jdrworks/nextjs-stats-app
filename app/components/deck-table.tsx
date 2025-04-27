@@ -1,9 +1,9 @@
 import React from "react";
 import { DeckRow } from "@/app/components/deck-row";
-import { Deck } from "@/app/lib/types";
+import { DeckWithRelations } from "@/app/lib/types";
 
 export function DeckTable({ decks, showPlayers }: {
-    decks: Deck[],
+    decks: DeckWithRelations[],
     showPlayers?: boolean,
 }) {
 
@@ -23,7 +23,7 @@ export function DeckTable({ decks, showPlayers }: {
             </thead>
             <tbody>
                 {decks.map((deck) => (
-                    <DeckRow key={deck.id} deck={deck} />
+                    <DeckRow key={deck.id} deck={deck} showPlayer={showPlayers} />
                 ))}
             </tbody>
         </table>

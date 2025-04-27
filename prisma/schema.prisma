@@ -4,38 +4,40 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model deck {
-  id        Int         @id @default(autoincrement())
-  player_id Int
-  name      String
-  player    player?     @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deck_game deck_game[]
+model Deck {
+  id          Int          @id @default(autoincrement())
+  name        String
+  playerId    Int
+  player      Player       @relation(fields: [playerId], references: [id])
+  gameResults GameResult[]
 }
 
-model deck_game {
-  id        Int     @id @default(autoincrement())
-  game_id   Int
-  deck_id   Int
-  player_id Int
-  position  Int
-  player    player? @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deck      deck?   @relation(fields: [deck_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  game      game?   @relation(fields: [game_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model Game {
+  id          Int          @id @default(autoincrement())
+  datetime    DateTime     @default(now())
+  gameResults GameResult[]
 }
 
-model game {
-  id        Int         @id @default(autoincrement())
-  datetime  Int
-  deck_game deck_game[]
+model Player {
+  id          Int          @id @default(autoincrement())
+  name        String
+  decks       Deck[]
+  gameResults GameResult[]
 }
 
-model player {
-  id        Int         @id @default(autoincrement())
-  name      String
-  deck      deck[]
-  deck_game deck_game[]
+model GameResult {
+  id       Int @id @default(autoincrement())
+  deckId   Int
+  gameId   Int
+  playerId Int
+
+  deck   Deck   @relation(fields: [deckId], references: [id])
+  game   Game   @relation(fields: [gameId], references: [id])
+  player Player @relation(fields: [playerId], references: [id])
+
+  position Int
 }

@@ -2,10 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { Prisma, PrismaClient} from '@/generated/prisma'
-import deck_gameCreateManyInput = Prisma.deck_gameCreateManyInput;
-import { DateTime } from 'luxon';
+import { GameResult, Prisma, PrismaClient } from '@/generated/prisma'
 import { z } from "zod";
+import PrismaPromise = Prisma.PrismaPromise;
+import GameResultUncheckedCreateInput = Prisma.GameResultUncheckedCreateInput;
+import GameResultUncheckedUpdateInput = Prisma.GameResultUncheckedUpdateInput;
 
 const prisma = new PrismaClient()
 
@@ -19,30 +20,26 @@ export type State = {
 };
 
 export async function createGame(prevState: State, formData: FormData) {
-    const newGame = await prisma.game.create({
-        data: {
-            datetime: DateTime.now().toSeconds(),
-        }
-    });
-    const deck_games: deck_gameCreateManyInput[] = [];
-    formData.getAll('player')?.map((player, index) => {
-        deck_games[index] = {
-            game_id: newGame.id,
-            player_id: 0,
-            deck_id: 0,
+    const newGame = await prisma.game.create({});
+    const gameResults: GameResultUncheckedCreateInput[] = [];
+    formData.getAll('playerId')?.map((playerId, index) => {
+        gameResults[index] = {
+            deckId: 0,
+            gameId: newGame.id,
+            playerId: 0,
             position: 0,
         };
-        deck_games[index]['player_id'] = z.coerce.number().parse(player);
+        gameResults[index]['playerId'] = z.coerce.number().parse(playerId);
     });
-    formData.getAll('deck')?.map((deck, index) => {
-        deck_games[index]['deck_id'] = z.coerce.number().parse(deck);
+    formData.getAll('deckId')?.map((deckId, index) => {
+        gameResults[index]['deckId'] = z.coerce.number().parse(deckId);
     })
     formData.getAll('position')?.map((position, index) => {
-        deck_games[index]['position'] = z.coerce.number().parse(position);
+        gameResults[index]['position'] = z.coerce.number().parse(position);
     })
 
-    await prisma.deck_game.createMany({
-        data: deck_games
+    await prisma.gameResult.createMany({
+        data: gameResults
     });
 
     revalidatePath('/games');
@@ -52,39 +49,41 @@ export async function createGame(prevState: State, formData: FormData) {
 }
 
 export async function updateGame(prevState: State, formData: FormData) {
-    const deck_games: deck_gameCreateManyInput[] = [];
-    const game_id = formData.get('game');
-    formData.getAll('player')?.map((player, index) => {
-        deck_games[index] = {
-            game_id: z.coerce.number().parse(game_id),
-            player_id: 0,
-            deck_id: 0,
+    const gameResults: GameResultUncheckedUpdateInput[] = [];
+    const gameId = formData.get('gameId');
+    formData.getAll('playerId')?.map((playerId, index) => {
+        gameResults[index] = {
+            deckId: 0,
+            gameId: z.coerce.number().parse(gameId),
+            id: 0,
+            playerId: 0,
             position: 0,
         };
-        deck_games[index]['player_id'] = z.coerce.number().parse(player);
+        gameResults[index]['playerId'] = z.coerce.number().parse(playerId);
     });
-    formData.getAll('deck')?.map((deck, index) => {
-        deck_games[index]['deck_id'] = z.coerce.number().parse(deck);
+    formData.getAll('deckId')?.map((deckId, index) => {
+        gameResults[index]['deckId'] = z.coerce.number().parse(deckId);
     })
     formData.getAll('position')?.map((position, index) => {
-        deck_games[index]['position'] = z.coerce.number().parse(position);
+        gameResults[index]['position'] = z.coerce.number().parse(position);
     })
     formData.getAll('id')?.map((id, index) => {
-        deck_games[index]['id'] = z.coerce.number().parse(id);
+        gameResults[index]['id'] = z.coerce.number().parse(id);
     })
 
-    await Promise.all(deck_games.map(async (deck_game) => {
-        await prisma.deck_game.update({
-            where: {
-                id: deck_game.id
-            },
-            data: {
-                player_id: deck_game.player_id,
-                deck_id: deck_game.deck_id,
-                position: deck_game.position
-            }
-        });
-    }));
+    const transactionQueries: PrismaPromise<GameResult>[] = [];
+    gameResults.map(async (gameResult: GameResultUncheckedUpdateInput) => {
+        transactionQueries.push(
+            prisma.gameResult.update({
+                where: {
+                    id: z.coerce.number().parse(gameResult.id)
+                },
+                data: gameResult,
+            })
+        );
+    })
+
+    await prisma.$transaction(transactionQueries);
 
     revalidatePath('/games');
     redirect('/games');
@@ -93,11 +92,11 @@ export async function updateGame(prevState: State, formData: FormData) {
 }
 
 export async function createDeck(prevState: State, formData: FormData) {
-    const playerId = z.coerce.number().parse(formData.get('player'));
+    const playerId = z.coerce.number().parse(formData.get('playerId'));
     const name = z.coerce.string().parse(formData.get('name'));
     const deck = await prisma.deck.create({
         data: {
-            player_id: playerId,
+            playerId: playerId,
             name: name,
         }
     });
@@ -109,15 +108,15 @@ export async function createDeck(prevState: State, formData: FormData) {
 }
 
 export async function updateDeck(prevState: State, formData: FormData) {
-    const deckId = z.coerce.number().parse(formData.get('deck'));
-    const playerId = z.coerce.number().parse(formData.get('player'));
+    const deckId = z.coerce.number().parse(formData.get('deckId'));
+    const playerId = z.coerce.number().parse(formData.get('playerId'));
     const name = z.coerce.string().parse(formData.get('name'));
     const deck = await prisma.deck.update({
         where: {
             id: deckId,
         },
         data: {
-            player_id: playerId,
+            playerId: playerId,
             name: name,
         }
     });
