@@ -79,11 +79,12 @@ export const fetchDeck = async (id: number) => {
     })
 }
 
-export const fetchGames = async () => {
+export const fetchGames = async (count?: number) => {
     return prisma.game.findMany({
         orderBy: {
             datetime: 'desc',
         },
+        ...(count ? { take: count } : {}),
         include: gameInclude
     })
 }
