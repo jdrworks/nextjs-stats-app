@@ -21,7 +21,7 @@ export function DeckRow({ deck, showPlayer }: { deck: DeckWithRelations, showPla
     const winrate = wins + losses === 0 ? 'N/A' : Math.round((wins / (wins + losses)) * 100) + '%';
 
     return (
-        <tr key={deck.id} className="border-t-1 border-gray-200">
+        <tr key={deck.id} className="border-t-1 border-slate-700">
             <td className="py-2">{deck.name}</td>
             { showPlayer && (
                 <td className="py-2">

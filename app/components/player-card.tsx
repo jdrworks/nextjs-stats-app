@@ -24,7 +24,7 @@ games: GameResult[]}) {
                 <Button href={`/player/${id}`}>Details</Button>
             </div>
             <table className="w-full">
-                <thead className="font-bold border-b-2 border-gray-200 text-left">
+                <thead className="font-bold border-b-2 border-slate-700 text-left">
                     <tr>
                         <th>Wins</th>
                         <th>Losses</th>

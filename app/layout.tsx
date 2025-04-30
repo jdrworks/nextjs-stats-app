@@ -17,7 +17,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={`h-full bg-slate-300`}>
+        <html lang="en" className={`h-full bg-slate-900`}>
             <body className="antialiased h-full">
                 <div className="min-h-full">
                     <NavBar/>
