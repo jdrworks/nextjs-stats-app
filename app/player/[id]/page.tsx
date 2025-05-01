@@ -5,6 +5,7 @@ import Card from "@/app/components/card";
 import React from "react";
 import { DeckTable } from "@/app/components/deck-table";
 import { PlayerWithRelations } from "@/app/lib/types";
+import { StatCards } from "@/app/components/stat-cards";
 
 export const metadata: Metadata = {
     title: "Player Details",
@@ -13,12 +14,11 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: Promise<{ id: number }>}) {
     const { id } = await params;
     const player: PlayerWithRelations = await fetchPlayer(id);
-    console.log(player);
 
     return (
         <Header text={`${player.name}'s Details`}>
             <div className="w-full grid grid-cols-1 gap-4">
-                {/*<StatCards games={player.games} />*/}
+                <StatCards gameResults={player.gameResults} />
                 <Card>
                     <div className="flex items-center justify-between mb-3">
                         <strong className="text-xl">Decks</strong>

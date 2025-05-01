@@ -14,7 +14,6 @@ export function StatCards({ gameResults }:  { gameResults: GameResultWithRelatio
     let threePlayerWins = 0;
     let threePlayerLosses = 0;
     const gameCount = gameResults.length;
-    console.log(gameResults);
 
     gameResults.forEach((gameResult) => {
         let playerPosition = 0;
@@ -29,6 +28,7 @@ export function StatCards({ gameResults }:  { gameResults: GameResultWithRelatio
 
         let secondPlaces = 0;
         let thirdPlaces = 0;
+        const playerCount = gameResult.game.gameResults.length;
         gameResult.game.gameResults.map((subGameResult: GameResultWithPlayer) => {
             if (subGameResult.position > lowestPosition) {
                 lowestPosition = subGameResult.position;
@@ -38,13 +38,13 @@ export function StatCards({ gameResults }:  { gameResults: GameResultWithRelatio
                 secondPlaces++;
             }
 
-            if (subGameResult.position === 3 && gameCount !== 3) {
+            if (subGameResult.position === 3 && playerCount !== 3) {
                 thirdPlaces++;
             }
 
-            if (subGameResult.playerId === subGameResult.playerId) {
+            if (subGameResult.playerId === gameResult.playerId) {
                 playerPosition = subGameResult.position;
-                if (gameCount === 3) {
+                if (playerCount === 3) {
                     if (subGameResult.position === 1) {
                         threePlayerWins++;
                     } else {
