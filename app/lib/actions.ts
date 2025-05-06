@@ -7,14 +7,20 @@ import { z } from "zod";
 import PrismaPromise = Prisma.PrismaPromise;
 import GameResultUncheckedCreateInput = Prisma.GameResultUncheckedCreateInput;
 import GameResultUncheckedUpdateInput = Prisma.GameResultUncheckedUpdateInput;
+import { FormState } from "@/app/lib/types";
 
 const prisma = new PrismaClient()
 
+const PlayerSchema = z.object({
+    id: z.number(),
+    name: z.string().nonempty({message: "Player Name is required."}),
+});
+
+const CreatePlayer = PlayerSchema.omit({ id: true })
+
 export type State = {
     errors?: {
-        customerId?: string[];
-        amount?: string[];
-        status?: string[];
+        name?: string[];
     };
     message?: string | null;
 };
@@ -125,4 +131,30 @@ export async function updateDeck(prevState: State, formData: FormData) {
     redirect(`/deck/${deck.id}`);
 
     return prevState;
+}
+
+export async function createPlayer(prevState: FormState, formData: FormData): Promise<FormState> {
+    const validatedFields = CreatePlayer.safeParse({
+        name: formData.get('name'),
+    });
+
+    if (!validatedFields.success) {
+        console.log('error');
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Failed to Create Player.',
+            status: 'error',
+        }
+    }
+
+    const { name } = validatedFields.data;
+
+    const player = await prisma.player.create({
+        data: {
+            name: name,
+        }
+    });
+
+    revalidatePath(`/player/${player.id}`);
+    redirect(`/player/${player.id}`);
 }

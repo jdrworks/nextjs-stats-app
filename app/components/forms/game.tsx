@@ -68,11 +68,11 @@ export function GameForm({playerConfig, deckConfig, gameId, gameFormRows}: {
                                           value={input.deckId}/>
                             </div>
                             <div className="flex-grow">
-                                <label className="block text-md font-bold text-gray-900">Position</label>
+                                <label className="block text-md font-bold text-slate-300">Position</label>
                                 <input
                                     type="number"
                                     min="0"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                    className="bg-gray-50 border border-gray-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                                     name='position'
                                     value={input.position}
                                     onChange={event => handleFormChange(index, event)}

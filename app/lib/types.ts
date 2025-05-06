@@ -30,3 +30,11 @@ export type DeckWithRelations = Prisma.DeckGetPayload<typeof deckWithRelations>
 export type GameResultWithRelations = Prisma.GameResultGetPayload<typeof gameResultWithRelations>
 export type GameResultWithPlayer = Prisma.GameResultGetPayload<typeof gameResultWithPlayer>
 export type GameWithRelations = Prisma.GameGetPayload<typeof gameWithRelations>
+
+export type FormState = {
+    message?: string | null;
+    errors?: {
+        name?: string[];
+    };
+    status: 'default' | 'loading' | 'success' | 'error',
+}

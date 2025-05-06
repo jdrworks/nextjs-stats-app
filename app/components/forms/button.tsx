@@ -1,4 +1,9 @@
 import React from "react";
+import { useFormStatus } from "react-dom";
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    children: React.ReactNode;
+}
 
 export function ControlButton({clickHandler, color, children}: {
     clickHandler: () => void,
@@ -22,6 +27,21 @@ export function ControlButton({clickHandler, color, children}: {
                     </div>
                 </div>
             </div>
+        </button>
+    );
+}
+
+export function Button({ children, ...rest }: ButtonProps) {
+    const { pending } = useFormStatus();
+
+    return (
+        <button
+            {...rest}
+            className='px-2.5 py-2 text-sky-50 bg-sky-500 rounded-lg hover:bg-sky-600 hover:text-white aria-disabled:cursor-not-allowed disabled:bg-sky-300 disabled:text-slate-500 justify-center'
+            disabled={pending}
+            aria-disabled={pending}
+        >
+            {children}
         </button>
     );
 }
