@@ -11,15 +11,15 @@ export function ControlButton({clickHandler, color, children}: {
     children: React.ReactNode
 }) {
     const colorVariants: { [key: string]: string } = {
-        green: "border-green-600 text-green-600 hover:bg-green-600",
-        red: "border-red-600 text-red-600 hover:bg-red-600",
+        green: "border-emerald-600 text-emerald-600 hover:bg-emerald-600",
+        red: "border-rose-600 text-rose-600 hover:bg-rose-600",
     };
 
     return (
         <button type="button" onClick={clickHandler} className="w-auto h-auto">
             <div className="flex-1 h-full">
                 <div className={`
-                    flex items-center justify-center flex-1 h-full p-2.5 border hover:text-white rounded-lg
+                    flex items-center justify-center flex-1 h-full p-2.5 border hover:text-white rounded-[3px] cursor-pointer transition ease-out duration-100
                     ${colorVariants[color]}
                 `}>
                     <div className="relative">

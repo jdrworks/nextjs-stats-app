@@ -38,3 +38,13 @@ export type FormState = {
     };
     status: 'default' | 'loading' | 'success' | 'error',
 }
+
+export type OptionType = {
+    value: string | number,
+    label: string,
+}
+
+export type GroupType = {
+    label: string,
+    options: OptionType[],
+}

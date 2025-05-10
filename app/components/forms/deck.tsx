@@ -1,12 +1,12 @@
 'use client';
 
-import Dropdown, { dropdownConfig } from "@/app/components/forms/dropdown";
-import React, { ChangeEvent, useActionState, useState } from "react";
+import React, { useActionState, useState } from "react";
 import { createDeck, updateDeck } from "@/app/lib/actions";
-import { DeckWithRelations } from "@/app/lib/types";
+import { DeckWithRelations, OptionType } from "@/app/lib/types";
+import Select from "react-select";
 
-export function DeckForm({ playerConfig, deck }: {
-    playerConfig: dropdownConfig,
+export function DeckForm({ playerOptions, deck }: {
+    playerOptions: OptionType[],
     deck?: DeckWithRelations,
 }) {
     const initialState = { message: null, errors: {} };
@@ -15,26 +15,53 @@ export function DeckForm({ playerConfig, deck }: {
     const [name, setName] = useState(deck ? deck.name : '');
     const [player, setPlayer] = useState(deck ? deck.playerId : 0);
 
-    const handlePlayerChange = (index: number, event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
-        setPlayer(parseInt(event.target.value, 10));
-    }
+    const playerIndex = playerOptions.map(e => e.value).indexOf(player);
 
     return (
         <form action={deck ? update : create}>
             <input type="hidden" name="deckId" value={deck?.id}/>
             <div className="flex gap-4">
                 <div className="flex-grow">
-                    <label className="block text-md font-bold text-gray-900">Deck Name</label>
+                    <label className="block text-md font-bold text-slate-300">Deck Name</label>
                     <input
                         type="text"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                        className="bg-slate-700 border border-slate-500 text-sm rounded-[3px] text-slate-300 hover:border-slate-400 block w-full p-2
+                        focus-within:border-sky-500 focus-within:hover:border-sky-500 focus-within:ring ring-sky-500 outline-none transition ease-out duration-100"
                         name='name'
                         value={name}
                         onChange={e => setName(e.target.value)}
                     />
                 </div>
                 <div className="flex-grow">
-                    <Dropdown config={playerConfig} value={player} index={0} onChange={handlePlayerChange}/>
+                    <label className="block text-md font-bold text-slate-300">Player</label>
+                    <Select
+                        instanceId={`player-select`}
+                        defaultValue={playerOptions[playerIndex]}
+                        options={playerOptions}
+                        isClearable={true}
+                        name="playerId"
+                        theme={(theme) => ({
+                            ...theme,
+                            borderRadius: 3,
+                            colors: {
+                                ...theme.colors,
+                                primary: 'var(--color-sky-500)',
+                                primary75: 'var(--color-sky-300)',
+                                primary50: 'var(--color-sky-200)',
+                                primary25: 'var(--color-slate-600)',
+                                danger: 'var(--color-red-500)',
+                                dangerLight: 'var(--color-red-200)',
+                                neutral0: 'var(--color-slate-700)',
+                                neutral10: 'var(--color-slate-100)',
+                                neutral20: 'var(--color-slate-500)',
+                                neutral30: 'var(--color-slate-400)',
+                                neutral40: 'var(--color-slate-400)',
+                                neutral50: 'var(--color-slate-500)',
+                                neutral60: 'var(--color-slate-400)',
+                                neutral80: 'var(--color-slate-300)',
+                            }
+                        })}
+                    />
                 </div>
             </div>
             <div className="flex-grow flex justify-end mt-6">

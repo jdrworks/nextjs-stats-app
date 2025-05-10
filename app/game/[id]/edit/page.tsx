@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import React from "react";
 import Card from "@/app/components/card";
 import { GameForm } from "@/app/components/forms/game";
-import { generateDropdownConfig, generateGameFormRows } from "@/app/lib/utils";
+import { generatePlayerAndDeckSelectOptions, generateGameFormRows } from "@/app/lib/utils";
 
 export const metadata: Metadata = {
     title: "Edit Game",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: Promise<{ id: number }>}) {
     const { id } = await params;
-    const dropdownConfigs = await generateDropdownConfig();
+    const playerAndDeckSelectOptions = await generatePlayerAndDeckSelectOptions();
     const gameFormRows = await generateGameFormRows(id);
 
     return (
@@ -19,8 +19,8 @@ export default async function Page({ params }: { params: Promise<{ id: number }>
             <div className="w-full grid grid-cols-1 gap-4">
                 <Card>
                     <GameForm
-                        playerConfig={dropdownConfigs.playerConfig}
-                        deckConfig={dropdownConfigs.deckConfig}
+                        playerOptions={playerAndDeckSelectOptions.playerOptions}
+                        deckOptions={playerAndDeckSelectOptions.deckOptions}
                         gameId={id}
                         gameFormRows={gameFormRows}
                     />

@@ -2,7 +2,7 @@ import Header from "@/app/components/header";
 import type {Metadata} from "next";
 import React from "react";
 import Card from "@/app/components/card";
-import {generateDropdownConfig} from "@/app/lib/utils";
+import {generatePlayerAndDeckSelectOptions} from "@/app/lib/utils";
 import { DeckForm } from "@/app/components/forms/deck";
 
 export const metadata: Metadata = {
@@ -10,13 +10,13 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    const dropdownConfigs = await generateDropdownConfig();
+    const playerAndDeckSelectOptions = await generatePlayerAndDeckSelectOptions();
 
     return (
         <Header text={`New Deck`}>
             <div className="w-full grid grid-cols-1 gap-4">
                 <Card>
-                    <DeckForm playerConfig={dropdownConfigs.playerConfig} />
+                    <DeckForm playerOptions={playerAndDeckSelectOptions.playerOptions} />
                 </Card>
             </div>
         </Header>

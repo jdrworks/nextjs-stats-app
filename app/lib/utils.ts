@@ -1,51 +1,31 @@
-import {fetchGame, fetchPlayers} from "@/app/lib/queries";
-import {dropdownConfig, dropdownOption, dropdownOptionGroup} from "@/app/components/forms/dropdown";
-import {GameFormRow} from "@/app/components/forms/game";
-import { DeckWithRelations, GameWithRelations, PlayerWithRelations } from "@/app/lib/types";
 
-export async function generateDropdownConfig(): Promise<{ playerConfig: dropdownConfig, deckConfig: dropdownConfig }> {
+import {fetchGame, fetchPlayers} from "@/app/lib/queries";
+import {GameFormRow} from "@/app/components/forms/game";
+import { DeckWithRelations, GameWithRelations, PlayerWithRelations, OptionType, GroupType } from "@/app/lib/types";
+
+export async function generatePlayerAndDeckSelectOptions(): Promise<{ playerOptions: OptionType[], deckOptions: GroupType[] }> {
     const players: PlayerWithRelations[] = await fetchPlayers();
-    const playerOptions: dropdownOption[] = [];
-    const deckOptionsGroup: dropdownOptionGroup[] = [];
+    const playerOptions: OptionType[] = [];
+    const deckOptionsGroup: GroupType[] = [];
     players.map((player) => {
         playerOptions.push({
             value: player.id,
-            text: player.name,
+            label: player.name,
         })
-        const deckOptions: dropdownOption[] = [];
+        const deckOptions: OptionType[] = [];
         player.decks.map((deck: DeckWithRelations) => {
             deckOptions.push({
                 value: deck.id,
-                text: deck.name,
+                label: deck.name,
             })
         })
         deckOptionsGroup.push({
-            text: player.name,
+            label: player.name,
             options: deckOptions,
         })
     });
-    const playerDropdownConfig: dropdownConfig = {
-        label: 'Choose a Player',
-        name: 'playerId',
-        options: playerOptions,
-        defaultOption: {
-            value: 0,
-            text: '',
-        },
-        value: 0
-    };
-    const deckDropdownConfig: dropdownConfig = {
-        label: 'Choose a Deck',
-        name: 'deckId',
-        optionGroups: deckOptionsGroup,
-        defaultOption: {
-            value: 0,
-            text: '',
-        },
-        value: 0
-    }
 
-    return { playerConfig: playerDropdownConfig, deckConfig: deckDropdownConfig };
+    return { playerOptions: playerOptions, deckOptions: deckOptionsGroup };
 }
 
 export async function generateGameFormRows(gameId: number): Promise<GameFormRow[]> {
