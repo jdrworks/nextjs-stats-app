@@ -4,6 +4,7 @@ import React, { useActionState, useState } from "react";
 import { createDeck, updateDeck } from "@/app/lib/actions";
 import { DeckWithRelations, OptionType } from "@/app/lib/types";
 import Select from "react-select";
+import { Button } from "@/app/components/forms/button";
 
 export function DeckForm({ playerOptions, deck }: {
     playerOptions: OptionType[],
@@ -64,17 +65,8 @@ export function DeckForm({ playerOptions, deck }: {
                     />
                 </div>
             </div>
-            <div className="flex-grow flex justify-end mt-6">
-                <button type="submit" className="w-auto h-auto">
-                    <div className="flex-1 h-full">
-                        <div
-                            className="flex items-center justify-center flex-1 h-full px-2.5 py-2 text-emerald-50 bg-emerald-700 rounded-lg hover:bg-emerald-800 hover:text-white">
-                            <div className="relative font-bold">
-                                {deck ? 'Update Deck' : 'Add Deck'}
-                            </div>
-                        </div>
-                    </div>
-                </button>
+            <div className="flex-grow flex justify-end mt-5">
+                <Button type="submit">{deck ? 'Update Deck' : 'Add Deck'}</Button>
             </div>
         </form>
     )

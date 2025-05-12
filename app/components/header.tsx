@@ -15,7 +15,7 @@ export default function Header({ children, text, button }: Readonly<{ children: 
                     { button && (
                         <Link
                             href={button.href}
-                            className="rounded-sm text-lg font-bold bg-sky-500 text-sky-50 px-2 py-1 hover:bg-sky-600 hover:text-white"
+                            className="rounded-[3px] text-lg font-bold bg-sky-500 text-sky-50 px-2 py-1 hover:bg-sky-600 hover:text-white"
                         >
                             {button.text}
                         </Link>

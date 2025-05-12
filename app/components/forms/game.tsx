@@ -3,7 +3,7 @@
 import React, {ChangeEvent, useActionState, useState } from 'react';
 import { XMarkIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { createGame, updateGame } from "@/app/lib/actions";
-import { ControlButton } from "@/app/components/forms/button";
+import { Button, ControlButton } from "@/app/components/forms/button";
 import { z } from "zod";
 import Select from "react-select";
 import { GroupType, OptionType } from "@/app/lib/types";
@@ -154,17 +154,8 @@ export function GameForm({playerOptions, deckOptions, gameId, gameFormRows}: {
                     )
                 })}
 
-                <div className="flex-grow flex justify-end mt-6">
-                    <button type="submit" className="w-auto h-auto">
-                        <div className="flex-1 h-full">
-                            <div
-                                className="flex items-center justify-center flex-1 h-full px-2.5 py-2 text-emerald-50 bg-emerald-700 rounded-lg hover:bg-emerald-800 hover:text-white">
-                                <div className="relative font-bold">
-                                    {gameId ? 'Update Game' : 'Add Game'}
-                                </div>
-                            </div>
-                        </div>
-                    </button>
+                <div className="flex-grow flex justify-end mt-5">
+                    <Button type="submit">{gameId ? 'Update Game' : 'Add Game'}</Button>
                 </div>
 
             </div>
