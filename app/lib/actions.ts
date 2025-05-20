@@ -8,6 +8,8 @@ import PrismaPromise = Prisma.PrismaPromise;
 import GameResultUncheckedCreateInput = Prisma.GameResultUncheckedCreateInput;
 import GameResultUncheckedUpdateInput = Prisma.GameResultUncheckedUpdateInput;
 import { FormState } from "@/app/lib/types";
+import { auth } from "@/app/lib/auth";
+import { headers } from "next/headers";
 
 const prisma = new PrismaClient()
 
@@ -18,14 +20,20 @@ const PlayerSchema = z.object({
 
 const CreatePlayer = PlayerSchema.omit({ id: true })
 
-export type State = {
-    errors?: {
-        name?: string[];
-    };
-    message?: string | null;
-};
+const UserSchema = z.object({
+    email: z.string().email().nonempty({message: "Password is required."}),
+    password: z.string().nonempty({message: "Password is required."}),
+});
 
-export async function createGame(prevState: State, formData: FormData) {
+const SignInUser = UserSchema;
+
+export async function createGame(prevState: FormState, formData: FormData) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+    if(!session) {
+        redirect("/signin");
+    }
     const newGame = await prisma.game.create({});
     const gameResults: GameResultUncheckedCreateInput[] = [];
     formData.getAll('playerId')?.map((playerId, index) => {
@@ -54,7 +62,13 @@ export async function createGame(prevState: State, formData: FormData) {
     return prevState;
 }
 
-export async function updateGame(prevState: State, formData: FormData) {
+export async function updateGame(prevState: FormState, formData: FormData) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+    if(!session) {
+        redirect("/signin");
+    }
     const gameResults: GameResultUncheckedUpdateInput[] = [];
     const gameId = formData.get('gameId');
     formData.getAll('playerId')?.map((playerId, index) => {
@@ -97,7 +111,13 @@ export async function updateGame(prevState: State, formData: FormData) {
     return prevState;
 }
 
-export async function createDeck(prevState: State, formData: FormData) {
+export async function createDeck(prevState: FormState, formData: FormData) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+    if(!session) {
+        redirect("/signin");
+    }
     const playerId = z.coerce.number().parse(formData.get('playerId'));
     const name = z.coerce.string().parse(formData.get('name'));
     const deck = await prisma.deck.create({
@@ -113,7 +133,13 @@ export async function createDeck(prevState: State, formData: FormData) {
     return prevState;
 }
 
-export async function updateDeck(prevState: State, formData: FormData) {
+export async function updateDeck(prevState: FormState, formData: FormData) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+    if(!session) {
+        redirect("/signin");
+    }
     const deckId = z.coerce.number().parse(formData.get('deckId'));
     const playerId = z.coerce.number().parse(formData.get('playerId'));
     const name = z.coerce.string().parse(formData.get('name'));
@@ -134,12 +160,17 @@ export async function updateDeck(prevState: State, formData: FormData) {
 }
 
 export async function createPlayer(prevState: FormState, formData: FormData): Promise<FormState> {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+    if(!session) {
+        redirect("/signin");
+    }
     const validatedFields = CreatePlayer.safeParse({
         name: formData.get('name'),
     });
 
     if (!validatedFields.success) {
-        console.log('error');
         return {
             errors: validatedFields.error.flatten().fieldErrors,
             message: 'Missing Fields. Failed to Create Player.',
@@ -157,4 +188,46 @@ export async function createPlayer(prevState: FormState, formData: FormData): Pr
 
     revalidatePath(`/player/${player.id}`);
     redirect(`/player/${player.id}`);
+}
+
+export async function signIn(prevState: FormState, formData: FormData): Promise<FormState>  {
+    const validatedFields = SignInUser.safeParse({
+        email: formData.get('email'),
+        password: formData.get('password'),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Failed to Create Player.',
+            status: 'error',
+        }
+    }
+
+    const { token, user } = await auth.api.signInEmail({
+        body: {
+            email: validatedFields.data.email,
+            password: validatedFields.data.password,
+        }
+    });
+
+    revalidatePath(`/`);
+    redirect(`/`);
+}
+
+export async function signOut(prevState: FormState, formData: FormData): Promise<FormState> {
+    try {
+        await auth.api.signOut({
+            headers: await headers()
+        });
+    } catch {
+        return {
+            errors: null,
+            message: 'Could Not Sign Out.',
+            status: 'error',
+        }
+    }
+
+    revalidatePath(`/`);
+    redirect(`/`);
 }

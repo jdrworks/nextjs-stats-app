@@ -27,7 +27,7 @@ const links: { text: string, href: string, activeSegments: string[] }[] = [
     },
 ]
 
-export default function NavbarLinks() {
+export function NavbarLinks() {
     const activeSegment = useSelectedLayoutSegment() ?? '';
     return (
         <>
@@ -40,7 +40,32 @@ export default function NavbarLinks() {
                         className={clsx(
                             'rounded-md px-3 py-2 text-sm font-medium',
                             {
-                                'text-gray-300 hover:bg-slate-700 hover:text-white': !isActive,
+                                'text-slate-300 hover:bg-slate-700 hover:text-white': !isActive,
+                                'bg-slate-700 text-white': isActive,
+                            }
+                        )}>
+                        {link.text}
+                    </Link>
+                );
+            })}
+        </>
+    );
+}
+
+export function MobileLinks() {
+    const activeSegment = useSelectedLayoutSegment() ?? '';
+    return (
+        <>
+            {links.map((link) => {
+                const isActive = link.activeSegments.includes(activeSegment);
+                return (
+                    <Link
+                        key={link.href}
+                        href={link.href}
+                        className={clsx(
+                            'block rounded-md px-3 py-2 text-base font-medium',
+                            {
+                                'text-slate-300': !isActive,
                                 'bg-slate-700 text-white': isActive,
                             }
                         )}>

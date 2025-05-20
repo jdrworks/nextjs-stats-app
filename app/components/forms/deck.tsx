@@ -2,7 +2,7 @@
 
 import React, { useActionState, useState } from "react";
 import { createDeck, updateDeck } from "@/app/lib/actions";
-import { DeckWithRelations, OptionType } from "@/app/lib/types";
+import { DeckWithRelations, FormState, OptionType } from "@/app/lib/types";
 import Select from "react-select";
 import { Button } from "@/app/components/forms/button";
 
@@ -10,7 +10,7 @@ export function DeckForm({ playerOptions, deck }: {
     playerOptions: OptionType[],
     deck?: DeckWithRelations,
 }) {
-    const initialState = { message: null, errors: {} };
+    const initialState: FormState = { message: null, errors: {}, status: 'default' };
     const [createState, create] = useActionState(createDeck, initialState);
     const [updateState, update] = useActionState(updateDeck, initialState);
     const [name, setName] = useState(deck ? deck.name : '');

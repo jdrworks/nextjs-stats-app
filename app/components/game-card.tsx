@@ -6,12 +6,14 @@ import { DateTime } from "luxon";
 import { GameWithRelations } from "@/app/lib/types";
 import clsx from "clsx";
 
-export function GameCard({ game }: { game: GameWithRelations }) {
+export function GameCard({ game, showButton }: { game: GameWithRelations, showButton: boolean }) {
     return (
         <Card key={game.id}>
             <div className="flex items-center justify-between mb-3">
                 <strong className="text-xl">{DateTime.fromJSDate(game.datetime).toLocaleString()}</strong>
-                <Button href={`/game/${game.id}/edit`}>Edit</Button>
+                {showButton && (
+                    <Button href={`/game/${game.id}/edit`}>Edit</Button>
+                )}
             </div>
             <table className="w-full">
                 <thead className="font-bold border-b-2 border-slate-700 text-left">

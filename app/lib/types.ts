@@ -34,8 +34,10 @@ export type GameWithRelations = Prisma.GameGetPayload<typeof gameWithRelations>
 export type FormState = {
     message?: string | null;
     errors?: {
-        name?: string[];
-    };
+        name?: string[],
+        email?: string[],
+        password?: string[],
+    } | null;
     status: 'default' | 'loading' | 'success' | 'error',
 }
 

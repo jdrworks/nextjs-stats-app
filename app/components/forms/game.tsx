@@ -6,7 +6,8 @@ import { createGame, updateGame } from "@/app/lib/actions";
 import { Button, ControlButton } from "@/app/components/forms/button";
 import { z } from "zod";
 import Select from "react-select";
-import { GroupType, OptionType } from "@/app/lib/types";
+import { FormState, GroupType, OptionType } from "@/app/lib/types";
+import { FormInput } from "@/app/components/forms/form-input";
 
 export interface GameFormRow {
     [k: string]: number;
@@ -22,14 +23,14 @@ export function GameForm({playerOptions, deckOptions, gameId, gameFormRows}: {
     gameId?: number,
     gameFormRows?: GameFormRow[],
 }) {
-    const initialState = { message: null, errors: {} };
+    const initialState: FormState = { message: null, errors: {}, status: 'default' };
     const [createState, create] = useActionState(createGame, initialState);
     const [updateState, update] = useActionState(updateGame, initialState);
     const [inputFields, setInputFields] = useState<GameFormRow[]>(gameFormRows ? gameFormRows : [
         { deckId: 0, id: 0, playerId: 0, position: 0 }
     ])
 
-    const handleFormChange = (index: number, event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
+    const handleFormChange = (index: number, event: ChangeEvent<HTMLInputElement>) => {
         const data: GameFormRow[] = [...inputFields];
         data[index][event.target.name] = z.coerce.number().parse(event.target.value);
         setInputFields(data);
@@ -135,13 +136,14 @@ export function GameForm({playerOptions, deckOptions, gameId, gameFormRows}: {
                                     />
                                 </div>
                                 <div className="basis-4/12">
-                                    <label className="block text-md font-bold text-slate-300">Position</label>
-                                    <input
-                                        className="bg-slate-700 border border-slate-500 text-sm rounded-[3px] text-slate-300 hover:border-slate-400 block w-full p-2
-                                        focus-within:border-sky-500 focus-within:hover:border-sky-500 focus-within:ring ring-sky-500 outline-none transition ease-out duration-100"
-                                        name='position'
+                                    <FormInput
+                                        name="position"
+                                        label="Position"
+                                        index={index}
+                                        onChange={handleFormChange}
                                         value={input.position}
-                                        onChange={event => handleFormChange(index, event)}
+                                        state={initialState}
+                                        type="text"
                                     />
                                 </div>
                             </div>
