@@ -7,7 +7,7 @@ import Link from "next/link";
 import { SignOutForm } from "@/app/components/forms/signout";
 
 
-export default async function NavbarAuth() {
+export async function NavbarAuth() {
     const session = await auth.api.getSession({
         headers: await headers()
     })

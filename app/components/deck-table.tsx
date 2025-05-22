@@ -15,9 +15,18 @@ export function DeckTable({ decks, showPlayers }: {
                 {showPlayers && (
                     <th>Owner</th>
                 )}
-                <th>Wins</th>
-                <th>Losses</th>
-                <th>Win Rate</th>
+                <th>
+                    <span className="hidden md:inline">Wins</span>
+                    <span className="md:hidden">W</span>
+                </th>
+                <th>
+                    <span className="hidden md:inline">Losses</span>
+                    <span className="md:hidden">L</span>
+                </th>
+                <th>
+                    <span className="hidden md:inline">Win Rate</span>
+                    <span className="md:hidden">W/R</span>
+                </th>
                 <th></th>
             </tr>
             </thead>

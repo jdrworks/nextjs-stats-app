@@ -70,10 +70,10 @@ export function GameForm({playerOptions, deckOptions, gameId, gameFormRows}: {
                         })
                     });
                     return (
-                        <div key={index} className="flex gap-4">
-                            <div className="flex-grow flex gap-4">
+                        <div key={index} className="flex gap-4 mb-4 md:mb-0">
+                            <div className="flex-grow flex flex-wrap md:flex-nowrap gap-4">
                                 <input type="hidden" name="id" value={input.id} />
-                                <div className="basis-4/12">
+                                <div className="basis-full md:basis-4/12">
                                     <label className="block text-md font-bold text-slate-300">Player</label>
                                     <Select
                                         instanceId={`player-select-${index}`}
@@ -104,7 +104,7 @@ export function GameForm({playerOptions, deckOptions, gameId, gameFormRows}: {
                                         })}
                                     />
                                 </div>
-                                <div className="basis-4/12">
+                                <div className="basis-full md:basis-4/12">
                                     <label className="block text-md font-bold text-slate-300">Deck</label>
                                     <Select
                                         instanceId={`deck-select-${index}`}
@@ -135,7 +135,7 @@ export function GameForm({playerOptions, deckOptions, gameId, gameFormRows}: {
                                         })}
                                     />
                                 </div>
-                                <div className="basis-4/12">
+                                <div className="basis-full md:basis-4/12">
                                     <FormInput
                                         name="position"
                                         label="Position"
@@ -147,7 +147,8 @@ export function GameForm({playerOptions, deckOptions, gameId, gameFormRows}: {
                                     />
                                 </div>
                             </div>
-                            <div className="flex-none content-end">
+                            <div className="flex-none content-center">
+                                <label className="block invisible">s</label>
                                 <ControlButton color="red" clickHandler={() => removeFields(index)}>
                                     <XMarkIcon className="size-4 stroke-current stroke-3"/>
                                 </ControlButton>
