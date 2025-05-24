@@ -199,23 +199,32 @@ export async function signIn(prevState: FormState, formData: FormData): Promise<
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to Create Player.',
+            message: 'Missing Fields. Failed to Sign In.',
             status: 'error',
         }
     }
 
-    const { token, user } = await auth.api.signInEmail({
-        body: {
-            email: validatedFields.data.email,
-            password: validatedFields.data.password,
+    try {
+        await auth.api.signInEmail({
+            body: {
+                email: validatedFields.data.email,
+                password: validatedFields.data.password,
+            }
+        });
+    } catch {
+        return {
+            errors: null,
+            message: 'Unable to Sign In.',
+            status: 'error',
         }
-    });
+    }
+
 
     revalidatePath(`/`);
     redirect(`/`);
 }
 
-export async function signOut(prevState: FormState, formData: FormData): Promise<FormState> {
+export async function signOut(): Promise<FormState> {
     try {
         await auth.api.signOut({
             headers: await headers()

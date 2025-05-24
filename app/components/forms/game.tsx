@@ -23,9 +23,9 @@ export function GameForm({playerOptions, deckOptions, gameId, gameFormRows}: {
     gameId?: number,
     gameFormRows?: GameFormRow[],
 }) {
+    const action = gameId ? updateGame : createGame;
     const initialState: FormState = { message: null, errors: {}, status: 'default' };
-    const [createState, create] = useActionState(createGame, initialState);
-    const [updateState, update] = useActionState(updateGame, initialState);
+    const [formState, dispatch] = useActionState(action, initialState);
     const [inputFields, setInputFields] = useState<GameFormRow[]>(gameFormRows ? gameFormRows : [
         { deckId: 0, id: 0, playerId: 0, position: 0 }
     ])
@@ -49,7 +49,7 @@ export function GameForm({playerOptions, deckOptions, gameId, gameFormRows}: {
     }
 
     return (
-        <form action={gameId ? update : create}>
+        <form action={dispatch}>
             <input type="hidden" name="gameId" value={gameId}/>
             <div className="flex justify-end">
                 <ControlButton color="green" clickHandler={addFields}>
@@ -152,6 +152,20 @@ export function GameForm({playerOptions, deckOptions, gameId, gameFormRows}: {
                                 <ControlButton color="red" clickHandler={() => removeFields(index)}>
                                     <XMarkIcon className="size-4 stroke-current stroke-3"/>
                                 </ControlButton>
+                            </div>
+                            <div aria-live="polite" aria-atomic="true">
+                                {formState.errors?.playerId &&
+                                    formState.errors.playerId.map((error: string) => (
+                                        <p className="text-sm text-rose-500" key={error}>
+                                            {error}
+                                        </p>
+                                    ))}
+                                {formState.errors?.deckId &&
+                                    formState.errors.deckId.map((error: string) => (
+                                        <p className="text-sm text-rose-500" key={error}>
+                                            {error}
+                                        </p>
+                                    ))}
                             </div>
                         </div>
                     )

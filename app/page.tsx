@@ -8,7 +8,7 @@ import { GameCard } from "@/app/components/game-card";
 import { auth } from "@/app/lib/auth";
 import { headers } from "next/headers";
 export const metadata: Metadata = {
-    title: "Dashboard",
+    title: `Dashboard | ${process.env.APP_NAME}`,
 };
 export default async function Home() {
     const session = await auth.api.getSession({

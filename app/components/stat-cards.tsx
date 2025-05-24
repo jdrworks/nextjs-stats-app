@@ -13,7 +13,6 @@ export function StatCards({ gameResults }:  { gameResults: GameResultWithRelatio
     let thirdPlaceTies = 0;
     let threePlayerWins = 0;
     let threePlayerLosses = 0;
-    const gameCount = gameResults.length;
 
     gameResults.forEach((gameResult) => {
         let playerPosition = 0;

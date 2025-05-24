@@ -10,16 +10,16 @@ export function DeckForm({ playerOptions, deck }: {
     playerOptions: OptionType[],
     deck?: DeckWithRelations,
 }) {
+    const action = deck ? updateDeck : createDeck;
     const initialState: FormState = { message: null, errors: {}, status: 'default' };
-    const [createState, create] = useActionState(createDeck, initialState);
-    const [updateState, update] = useActionState(updateDeck, initialState);
+    const [formState, dispatch] = useActionState(action, initialState);
     const [name, setName] = useState(deck ? deck.name : '');
-    const [player, setPlayer] = useState(deck ? deck.playerId : 0);
+    const player = deck ? deck.playerId : 0
 
     const playerIndex = playerOptions.map(e => e.value).indexOf(player);
 
     return (
-        <form action={deck ? update : create}>
+        <form action={dispatch}>
             <input type="hidden" name="deckId" value={deck?.id}/>
             <div className="flex gap-4">
                 <div className="flex-grow">
@@ -63,6 +63,14 @@ export function DeckForm({ playerOptions, deck }: {
                             }
                         })}
                     />
+                    <div aria-live="polite" aria-atomic="true">
+                        {formState.errors?.playerId &&
+                            formState.errors.playerId.map((error: string) => (
+                                <p className="text-sm text-rose-500" key={error}>
+                                    {error}
+                                </p>
+                            ))}
+                    </div>
                 </div>
             </div>
             <div className="flex-grow flex justify-end mt-5">

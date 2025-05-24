@@ -37,6 +37,8 @@ export type FormState = {
         name?: string[],
         email?: string[],
         password?: string[],
+        playerId?: string[],
+        deckId?: string[],
     } | null;
     status: 'default' | 'loading' | 'success' | 'error',
 }

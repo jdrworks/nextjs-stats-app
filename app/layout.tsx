@@ -6,8 +6,8 @@ import { NavbarAuth } from "@/app/components/navbar-auth";
 
 export const metadata: Metadata = {
     title: {
-        template: '%s | Magic Stats',
-        default: 'Magic Stats',
+        template: `%s | ${process.env.APP_NAME}`,
+        default: `${process.env.APP_NAME}`,
     },
     description: 'An easy interface for updating and viewing game stats written with Next.js.',
 };

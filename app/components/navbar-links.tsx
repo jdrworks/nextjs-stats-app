@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { usePathname, useSelectedLayoutSegment } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 import clsx from 'clsx';
 
 const links: { text: string, href: string, activeSegments: string[] }[] = [
