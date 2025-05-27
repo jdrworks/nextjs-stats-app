@@ -2,7 +2,7 @@
 
 import React, { useActionState } from "react";
 import { FormState } from "@/app/lib/types";
-import { createPlayer } from "@/app/lib/actions";
+import { createPlayer } from "@/app/lib/actions/player";
 import { Button } from "@/app/components/forms/button";
 import { FormInput } from "@/app/components/forms/form-input";
 

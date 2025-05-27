@@ -2,7 +2,7 @@
 
 import React, { useActionState } from "react";
 import { FormState } from "@/app/lib/types";
-import { signOut } from "@/app/lib/actions";
+import { signOut } from "@/app/lib/actions/auth";
 
 export function SignOutForm() {
     const initialState: FormState = { message: null, errors: {}, status: 'default' };

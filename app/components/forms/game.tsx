@@ -2,7 +2,7 @@
 
 import React, {ChangeEvent, useActionState, useState } from 'react';
 import { XMarkIcon, PlusIcon } from "@heroicons/react/24/solid";
-import { createGame, updateGame } from "@/app/lib/actions";
+import { createGame, updateGame } from "@/app/lib/actions/game";
 import { Button, ControlButton } from "@/app/components/forms/button";
 import { z } from "zod";
 import Select from "react-select";

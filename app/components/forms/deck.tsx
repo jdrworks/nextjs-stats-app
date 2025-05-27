@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useActionState, useState } from "react";
-import { createDeck, updateDeck } from "@/app/lib/actions";
+import { createDeck, updateDeck } from "@/app/lib/actions/deck";
 import { DeckWithRelations, FormState, OptionType } from "@/app/lib/types";
 import Select from "react-select";
 import { Button } from "@/app/components/forms/button";

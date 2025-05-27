@@ -2,7 +2,7 @@
 
 import React, { useActionState } from "react";
 import { FormState } from "@/app/lib/types";
-import { signIn } from "@/app/lib/actions";
+import { signIn } from "@/app/lib/actions/auth";
 import { Button } from "@/app/components/forms/button";
 import { FormInput } from "@/app/components/forms/form-input";
 
