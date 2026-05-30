@@ -17,8 +17,10 @@ export default async function Home() {
     const players: PlayerWithRelations[] = await fetchPlayers();
     const games: GameWithRelations[] = await fetchGames(4);
 
+
   return (
       <Header text={`Dashboard`}>
+
           <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
               {games.map((game: GameWithRelations) => (
                 <GameCard key={game.id} game={game} showButton={!!session} />

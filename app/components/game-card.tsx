@@ -6,7 +6,7 @@ import { DateTime } from "luxon";
 import { GameWithRelations } from "@/app/lib/types";
 import clsx from "clsx";
 
-export function GameCard({ game, showButton }: { game: GameWithRelations, showButton: boolean }) {
+export function GameCard({ game, showButton, playerId, deckId }: { game: GameWithRelations, showButton: boolean, playerId?: number, deckId?: number }) {
     return (
         <Card key={game.id}>
             <div className="flex items-center justify-between mb-3">
@@ -24,8 +24,12 @@ export function GameCard({ game, showButton }: { game: GameWithRelations, showBu
                 </tr>
                 </thead>
                 <tbody>
-                {game.gameResults.map((gameResult, index) => (
-                    <tr key={index} className={clsx({ 'font-extrabold': gameResult.position === 1 })}>
+                {game.gameResults.sort((a,b) => a.position - b.position).map((gameResult, index) => (
+                    <tr key={index} className={clsx(
+                        { 'font-extrabold': gameResult.position === 1 && !playerId && !deckId },
+                        { 'font-extrabold': gameResult.playerId === playerId },
+                        { 'font-extrabold': gameResult.deckId === deckId },
+                    )}>
                         <td>
                             <Link href={`/player/${gameResult.playerId}`}>
                                 {gameResult.player.name}

@@ -1,9 +1,10 @@
 import Card from "@/app/components/card";
 import React from "react";
 import { StatCard } from "@/app/components/stat-card";
-import { GameResultWithRelations, GameResultWithPlayer } from "@/app/lib/types";
+import { GameResultWithRelations, GameResultWithPlayer, PlayerWithRelations } from "@/app/lib/types";
+import { fetchPlayer } from "@/app/lib/queries";
 
-export function StatCards({ gameResults }:  { gameResults: GameResultWithRelations[] }) {
+export async function StatCards({ gameResults }:  { gameResults: GameResultWithRelations[] }) {
     let wins = 0;
     let losses = 0;
     let firstOut = 0;
@@ -13,8 +14,13 @@ export function StatCards({ gameResults }:  { gameResults: GameResultWithRelatio
     let thirdPlaceTies = 0;
     let threePlayerWins = 0;
     let threePlayerLosses = 0;
+    let fourPlayerWins = 0;
+    let fourPlayerLosses = 0;
+    let playerId = 0;
+    const lostTo: number[] = [];
 
     gameResults.forEach((gameResult) => {
+        playerId = gameResult.playerId;
         let playerPosition = 0;
         let lowestPosition = 0;
         let secondPosition = false;
@@ -41,8 +47,19 @@ export function StatCards({ gameResults }:  { gameResults: GameResultWithRelatio
                 thirdPlaces++;
             }
 
+            if (subGameResult.position === 1 && subGameResult.playerId !== playerId) {
+                lostTo.push(subGameResult.playerId);
+            }
+
             if (subGameResult.playerId === gameResult.playerId) {
                 playerPosition = subGameResult.position;
+                if (playerCount === 4) {
+                    if (subGameResult.position === 1) {
+                        fourPlayerWins++;
+                    } else {
+                        fourPlayerLosses++;
+                    }
+                }
                 if (playerCount === 3) {
                     if (subGameResult.position === 1) {
                         threePlayerWins++;
@@ -80,12 +97,34 @@ export function StatCards({ gameResults }:  { gameResults: GameResultWithRelatio
         }
     });
 
+    const winnerCount: { [key: number]: number } = {};
+    lostTo.forEach(playerId => {
+        if (winnerCount[playerId]) {
+            winnerCount[playerId]++;
+        } else {
+            winnerCount[playerId] = 1;
+        }
+    });
+    const sortable = [];
+    for (let pId in winnerCount) {
+        sortable.push([pId, winnerCount[pId]]);
+    }
+
+    let archEnemy: PlayerWithRelations | null = null;
+
+    if (sortable.length > 0) {
+        const archEnemyId: number = sortable.sort((a, b) => b[1] - a[1])[0][0];
+        archEnemy = await fetchPlayer(archEnemyId);
+    }
+
     const totalGames = wins + losses;
     const threePlayerTotalGames = threePlayerLosses + threePlayerLosses;
+    const fourPlayerTotalGames = fourPlayerLosses + fourPlayerLosses;
 
     const winrate = totalGames === 0 ? 'N/A' : Math.round((wins / totalGames) * 100) + '%';
     const firstOutRate = firstOut === 0 ? 'N/A' : Math.round((firstOut / totalGames) * 100) + '%';
     const threePlayerWinrate = threePlayerLosses === 0 ? 'N/A' : Math.round((threePlayerWins / threePlayerTotalGames) * 100) + '%';
+    const fourPlayerWinrate = fourPlayerLosses === 0 ? 'N/A' : Math.round((fourPlayerWins / fourPlayerTotalGames) * 100) + '%';
     const secondPlaceRate = secondPlace === 0 ? 'N/A' : Math.round((secondPlace / totalGames) * 100) + '%';
     const secondPlaceTiesRate = secondPlaceTies === 0 ? 'N/A' : Math.round((secondPlaceTies / totalGames) * 100) + '%';
     const thirdPlaceRate = thirdPlace === 0 ? 'N/A' : Math.round((thirdPlace / totalGames) * 100) + '%';
@@ -127,7 +166,12 @@ export function StatCards({ gameResults }:  { gameResults: GameResultWithRelatio
                 <StatCard title="3 Player Winrate">
                     {threePlayerWinrate}
                 </StatCard>
-
+                <StatCard title="4 Player Winrate">
+                    {fourPlayerWinrate}
+                </StatCard>
+                <StatCard title="Arch-Enemy">
+                    {archEnemy? archEnemy.name : 'N/A'}
+                </StatCard>
             </div>
         </Card>
     )

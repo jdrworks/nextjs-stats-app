@@ -16,6 +16,7 @@ export const subGameResultsInclude = {
     gameResults: {
         include: {
             player: true,
+            deck: true,
         }
     }
 }
